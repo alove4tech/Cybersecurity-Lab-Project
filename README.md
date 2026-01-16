@@ -10,7 +10,7 @@
 ---
 
 ## 🛠️ Tech Stack
-* **Hypervisor:** Proxmox VE 8.x
+* **Hypervisor:** Proxmox VE 9.x
 * **Firewall/Routing:** pfSense (Virtual Appliance)
 * **Attacker Node:** Debian 13 "Surgical" Build (Minimal XFCE)
 * **Remote Management:** MeshCentral (Encrypted Out-of-Band Access)
@@ -39,10 +39,12 @@ The lab is designed with a strict "deny-by-default" egress policy to maintain to
 Rather than using a pre-packaged distribution, I manually constructed a "Surgical" Debian 13 node. This approach maximizes system performance and ensures a deep understanding of tool dependencies.
 
 ### Custom Command Center
-I developed a custom Bash orchestration script (`welcome.sh`) that triggers upon login to provide real-time environment intelligence:
+I developed a custom Bash orchestration script (`welcome.sh`, [View the source code here](./scripts/welcome.sh)) that triggers upon login to provide real-time environment intelligence:
 * **Service Monitoring:** Tracks status of PostgreSQL (Metasploit DB) and Responder processes.
 * **Network Awareness:** Displays current Attacker IP and Gateway reachability.
 * **Resource Tracking:** Real-time RAM and Disk utilization to monitor VM health.
+
+
 
 ---
 
