@@ -49,7 +49,6 @@ I developed a custom Bash orchestration script (`welcome.sh`, [View the source c
 ---
 
 ## 📸 Proof of Concept
-*(Note: Upload your screenshots to an `/images` folder in this repo and update the links below!)*
 
 ### 1. pfSense Isolation Rule
 ![Firewall Rule](./images/pfsense-rules.png)
