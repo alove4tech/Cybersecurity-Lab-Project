@@ -27,4 +27,3 @@ It includes controlled **adversary emulation** targets (Metasploitable2/3) to ge
 - Windows Server 2022 Active Directory lab
 - Wazuh SIEM node for Windows + Linux monitoring
 - pfSense log ingestion into an ELK stack
-EOF
