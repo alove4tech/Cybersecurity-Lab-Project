@@ -65,3 +65,28 @@ Advanced audit subcategory enforcement is enabled to ensure policies are applied
 - Event ID 4624: Successful logon
 - Event ID 4625: Failed logon
 - Event ID 4672: Privileged logon
+
+## Domain-Joined Endpoints
+
+Two Windows client systems are joined to the `corp.local` domain to generate realistic authentication and Kerberos telemetry.
+
+### Windows 10 Client
+- Hostname: WIN10-CLIENT
+- Role: User workstation
+- Authentication: corp.local
+- Logging: Windows Security Event Log
+- Purpose: Legacy enterprise endpoint simulation
+
+### Windows 11 Client
+- Hostname: WIN11-CLIENT
+- Role: User workstation
+- Authentication: corp.local
+- Logging: Windows Security Event Log
+- Purpose: Modern enterprise endpoint simulation
+
+These endpoints are used to simulate:
+- Normal user logons
+- Privileged logons
+- Authentication failures
+- Kerberos ticket activity
+- Lateral movement attack paths
