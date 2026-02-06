@@ -9,3 +9,5 @@
 | Metasploitable3 (Win2k8) | Windows | Vulnerable target | DHCP | Cyberlab | Adversary emulation |
 | (Planned) AD DC | Windows Server 2022 | Domain Controller | Static | Cyberlab | Authentication + logging |
 | (Planned) Wazuh | Linux | SIEM | Static | Cyberlab | Centralized monitoring |
+| WIN10-CLIENT | Windows 10 | Domain Workstation | DHCP | Cyberlab | Domain-joined endpoint |
+| WIN11-CLIENT | Windows 11 | Domain Workstation | DHCP | Cyberlab | Domain-joined endpoint |
