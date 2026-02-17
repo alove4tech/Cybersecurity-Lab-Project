@@ -1,4 +1,3 @@
-cat > README.md <<'EOF'
 # Cybersecurity Homelab (SOC + Detection Lab)
 
 This repository documents my cybersecurity homelab designed to practice **defensive monitoring, detection engineering, and incident response**.  
