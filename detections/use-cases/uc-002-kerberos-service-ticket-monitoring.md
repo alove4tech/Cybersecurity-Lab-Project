@@ -82,3 +82,23 @@ Alert when:
 
 Rationale:
 Kerberoasting attacks rely on requesting RC4-encrypted service tickets to extract crackable hashes.
+
+## Encryption Hardening
+
+Initial Observation:
+Service tickets for svc_sql were issued using RC4 (TicketEncryptionType: 0x17).
+
+Root Cause:
+Service account did not have msDS-SupportedEncryptionTypes configured, allowing legacy RC4 negotiation.
+
+Remediation:
+Set msDS-SupportedEncryptionTypes = 24 (AES128 + AES256 only)
+Reset service account password to regenerate Kerberos keys.
+
+Validation:
+Post-change Event 4769 showed:
+- TicketEncryptionType: 0x12 (AES256)
+- SessionEncryptionType: 0x12
+
+Result:
+Kerberos service tickets now enforce modern AES encryption.
