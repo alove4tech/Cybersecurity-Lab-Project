@@ -102,3 +102,18 @@ Post-change Event 4769 showed:
 
 Result:
 Kerberos service tickets now enforce modern AES encryption.
+
+## Wazuh Custom Detection – RC4 Kerberos Service Tickets
+
+A custom Wazuh rule (ID 100100) was created to detect Event ID 4769
+where ticketEncryptionType = 0x17 (RC4).
+
+Test Procedure:
+- Forced RC4-only encryption on a lab service account
+- Disabled AES on client endpoint
+- Requested service ticket via klist get
+- Confirmed RC4 negotiation (0x17)
+- Validated Wazuh alert firing
+
+MITRE ATT&CK:
+T1558.003 – Kerberoasting

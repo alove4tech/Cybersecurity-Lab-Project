@@ -19,22 +19,6 @@ The goal of this project is to bridge offensive techniques with defensive monito
 **Domain Controller:** DC01 (10.10.69.10)  
 **Domain:** corp.local  
 
----
-
-Home Network
-|
-[pfSense]
-|
-| Cyberlab |
-| |
-| DC01 (AD/DNS) |
-| WIN10-CLIENT |
-| WIN11-CLIENT |
-| Debian Attack VM |
-| Metasploitable Targets |
-
----
-
 # Security Telemetry Validated
 
 The following event types are confirmed in the DC Security log:
@@ -49,17 +33,14 @@ These events form the baseline for future detection engineering and attack simul
 
 ---
 
-# Current Status
+## Current Stack (Lab at a Glance)
+- Network segmentation: pfSense (10.10.69.1) isolating 10.10.69.0/24
+- Identity: Windows Server 2022 AD DS / DNS (DC01 – 10.10.69.10)
+- Endpoints: WIN10-CLIENT, WIN11-CLIENT (domain-joined)
+- SIEM: Wazuh (server + agents) collecting Windows Security telemetry
+- Targets: Metasploitable2/3 (Ubuntu + Win2k8), Debian attack/management VM
 
-Baseline AD environment complete:
-- Domain functional
-- DNS resolving correctly
-- Clients joined
-- Auditing enabled
-- Snapshots taken
-
-Next phases will include:
-- Service Principal Name (SPN) configuration
-- Kerberos ticket analysis
-- Adversary simulation from Debian
-- Wazuh SIEM integration
+## Next Up
+- pfSense log ingestion into SIEM (syslog → pipeline → dashboards)
+- Detection engineering: additional Kerberos + AD use-cases
+- Incident response playbooks mapped to detections
