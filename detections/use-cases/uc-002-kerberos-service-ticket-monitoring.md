@@ -1,119 +1,132 @@
-# UC-002: Kerberos Service Ticket Monitoring
+# UC-002: Kerberos Service Ticket Monitoring (RC4 Downgrade Detection)
+
+## Detection Metadata
+
+- Detection ID: UC-002
+- Log Source: Windows Security Log
+- Event ID(s): 4769
+- Domain: corp.local
+- Severity: Medium (High if correlated with privilege activity)
+- MITRE ATT&CK:
+  - T1558.003 – Kerberoasting
+- Data Sensitivity: Domain authentication telemetry
+
+---
 
 ## Objective
 
-Monitor Kerberos service ticket activity (Event ID 4769) to detect abnormal service account usage and potential credential abuse.
+Detect weak Kerberos encryption (RC4) in service ticket issuance
+to identify potential Kerberoasting exposure or legacy configuration risk.
 
 ---
 
-## Baseline Behavior
-
-Normal 4769 events observed:
-
-- Account Name: jsmith
-- Service Name: MSSQLSvc/win10-client.corp.local:1433
-- Client Address: 10.10.69.52
-- Ticket Encryption Type: AES256
-- Failure Code: 0x0 (Success)
-
-Service tickets are requested when users access services tied to Service Principal Names (SPNs).
-
----
-
-## Suspicious Indicators
-
-- High volume of 4769 events for a single account
-- Service tickets requested for multiple SPNs in short time window
-- RC4 encryption when AES is available
-- Service tickets requested from unexpected hosts
-- Service account requesting tickets interactively
-
----
-
-## Detection Logic Concept
-
-Alert when:
-
-- Event ID = 4769
-- AND Ticket Encryption Type = RC4 (0x17)
-- OR More than X service tickets requested by same user within Y minutes
-- OR Client Address not in expected subnet
-
----
-
-## Response Actions
-
-1. Identify source host
-2. Validate user behavior
-3. Review account privilege level
-4. Check for related 4625 failures
-5. Reset credentials if compromise suspected
-
-## Observed Telemetry
+## Log Field Mapping
 
 Event ID: 4769
+
+Relevant Fields:
+
+- TargetUserName
+- ServiceName
+- Client Address
+- TicketEncryptionType
+- SessionKeyEncryptionType
+- Status
+
+Example Observed Event:
 
 - TargetUserName: jsmith@CORP.LOCAL
 - ServiceName: svc_sql
 - Client Address: 10.10.69.52
 - TicketEncryptionType: 0x17 (RC4-HMAC)
 - SessionKeyEncryptionType: 0x12 (AES256)
-- Status: 0x0 (Success)
+- Status: 0x0
 
 ---
 
-## Security Observation
+## Baseline Behavior
 
-Although AES encryption is supported in the domain, the service ticket was issued using RC4 (0x17).
-
-This behavior can indicate:
-- Legacy encryption compatibility
-- Potential Kerberoasting exposure
-- Weak cryptographic configuration
+Normal domain configuration:
+- AES128 / AES256 encryption
+- Standard service access patterns
+- Consistent client IP usage
 
 ---
 
-## Detection Opportunity
+## Detection Logic
 
-Alert when:
+Trigger alert when:
+
 - Event ID = 4769
-- TicketEncryptionType = 0x17
-- AND AES encryption is supported in the domain
+- AND TicketEncryptionType = 0x17 (RC4)
 
-Rationale:
-Kerberoasting attacks rely on requesting RC4-encrypted service tickets to extract crackable hashes.
+Optional Correlation Enhancements:
 
-## Encryption Hardening
+- Multiple SPNs requested by same user within X minutes
+- 4625 failures preceding 4769 activity
+- 4672 privileged logon following ticket issuance
+- Client IP outside expected subnet
 
-Initial Observation:
-Service tickets for svc_sql were issued using RC4 (TicketEncryptionType: 0x17).
+---
+
+## Detection Rationale
+
+Kerberoasting relies on requesting RC4-encrypted service tickets
+that can be offline cracked.
+
+Modern domains supporting AES should not issue RC4 tickets
+unless legacy configuration permits downgrade.
+
+---
+
+## Validation Procedure
+
+1. Force RC4-only encryption on service account
+2. Request service ticket via:klist get <SPN>
+3. Confirm Event 4769 logs 0x17
+4. Validate Wazuh rule ID 100100 fires
+
+---
+
+## False Positive Considerations
+
+- Legacy service accounts
+- Old operating systems
+- Compatibility configurations
+
+Mitigation:
+- Maintain inventory of approved legacy accounts
+- Monitor volume anomalies
+
+---
+
+## Hardening Action (Defensive Outcome)
 
 Root Cause:
-Service account did not have msDS-SupportedEncryptionTypes configured, allowing legacy RC4 negotiation.
+msDS-SupportedEncryptionTypes not configured.
 
 Remediation:
-Set msDS-SupportedEncryptionTypes = 24 (AES128 + AES256 only)
-Reset service account password to regenerate Kerberos keys.
+- Set msDS-SupportedEncryptionTypes = 24
+- Reset service account password
 
 Validation:
-Post-change Event 4769 showed:
+Post-remediation 4769 shows:
 - TicketEncryptionType: 0x12 (AES256)
-- SessionEncryptionType: 0x12
 
-Result:
-Kerberos service tickets now enforce modern AES encryption.
+---
 
-## Wazuh Custom Detection – RC4 Kerberos Service Tickets
+## Detection Limitations
 
-A custom Wazuh rule (ID 100100) was created to detect Event ID 4769
-where ticketEncryptionType = 0x17 (RC4).
+- Does not detect AES-based Kerberoasting
+- Requires proper audit policy configuration
+- Relies on accurate event ingestion
 
-Test Procedure:
-- Forced RC4-only encryption on a lab service account
-- Disabled AES on client endpoint
-- Requested service ticket via klist get
-- Confirmed RC4 negotiation (0x17)
-- Validated Wazuh alert firing
+---
 
-MITRE ATT&CK:
-T1558.003 – Kerberoasting
+## Detection Maturity
+
+✔ Custom Wazuh rule implemented (ID 100100)  
+✔ Downgrade reproduced in lab  
+✔ Remediation validated  
+✔ Playbook documented (PB-002)  
+✔ Case study documented (CS-002)
