@@ -56,10 +56,19 @@ Linux telemetry:
 
 ## Detection Highlights
 
-- SSH brute force detection (Linux auth.log)
-- Kerberos RC4 service ticket detection (Kerberoasting signal)
-- Privileged logon monitoring (4672)
-- Failed logon burst detection (4625 thresholding)
+**Authentication Monitoring:**
+- UC-001 – SSH brute force detection (Linux auth.log)
+- UC-002 – Kerberos RC4 service ticket detection (Kerberoasting signal)
+
+**Network Monitoring:**
+- UC-003 – Lateral movement detection (network scanning)
+- UC-004 – Blocked external access attempts (planned)
+- UC-005 – Port sweep / reconnaissance (planned)
+
+**Correlation Rules:**
+- Credential abuse (failed auth + network activity)
+- Kerberos lateral movement (Kerberos + scanning)
+- Privileged lateral movement (admin logon + network activity)
 
 Each use-case includes:
 - Objective
@@ -73,36 +82,45 @@ Each use-case includes:
 
 ## Current Operational State
 
-✔ AD domain deployed  
-✔ Advanced audit policies enabled  
-✔ Kerberos telemetry validated  
-✔ RC4 downgrade reproduced and remediated  
-✔ Custom Wazuh rule (ID 100100) firing successfully  
+✔ AD domain deployed
+✔ Advanced audit policies enabled
+✔ Kerberos telemetry validated
+✔ RC4 downgrade reproduced and remediated
+✔ Custom Wazuh rules deployed (IDs: 100100, 100200-100401, 100500-100700)
+✔ Incident response playbooks documented (PB-001, PB-002, PB-003)
+✔ Case studies validated (CS-001, CS-002, CS-003)
+✔ Wazuh deployment guide complete
+✔ pfSense syslog integration documented  
 
 ---
 
 ## Start Here
 
-- Lab Overview → docs/00-lab-overview.md  
-- Architecture → docs/01-architecture-diagram.md  
-- Active Directory Design → docs/02-active-directory-design.md  
+- Lab Overview → docs/00-lab-overview.md
+- Architecture → docs/01-architecture-diagram.md
+- Active Directory Design → docs/02-active-directory-design.md
+- Wazuh Deployment → docs/04-wazuh-deployment.md
 - Detection Engineering Overview → detections/
-- Incident Response Overview → incident-response/ 
+- Incident Response Overview → incident-response/
 - Roadmap → docs/99-roadmap.md  
 
 ---
 
 ## Roadmap
 
-Near-Term:
-- pfSense syslog ingestion into SIEM
-- 4625 burst + password spray correlation
-- 4768/4769 anomaly detection
+Near-Term (Complete):
+- ✅ pfSense syslog ingestion into SIEM
+- ✅ Wazuh deployment documentation
+- ✅ Network-based detection use cases (UC-003)
+- ✅ Lateral movement response playbooks (PB-003)
 
-Mid-Term:
-- Purple team scenario write-ups (attack → detect → respond)
-- Automated lab provisioning scripts
+Mid-Term (In Progress):
+- 🔵 4625 burst + password spray correlation
+- 🔵 4768/4769 anomaly detection
+- 🔵 4672 privileged logon correlation
+- 🔵 Dashboard visualization and metrics
 
 Long-Term:
-- Infrastructure-as-Code build automation
-- Dashboarding and detection metrics
+- 🔵 Automated lab provisioning scripts (Terraform/Ansible)
+- 🔵 Purple team scenario write-ups (attack → detect → respond)
+- 🔵 Infrastructure-as-Code build automation

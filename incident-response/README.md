@@ -68,8 +68,9 @@ The lab emphasizes:
 
 ## Current Playbooks
 
-- PB-001 – SSH Brute Force
+- PB-001 – SSH Brute Force / Password Spraying
 - PB-002 – Kerberos RC4 Service Ticket Alert
+- PB-003 – Lateral Movement / Network Scanning
 
 ---
 
@@ -77,6 +78,7 @@ The lab emphasizes:
 
 - CS-001 – SSH Brute Force Simulation
 - CS-002 – Kerberoasting Simulation
+- CS-003 – Lateral Movement Simulation
 
 ---
 
@@ -84,6 +86,6 @@ The lab emphasizes:
 
 - Password spray response
 - Privileged escalation response
-- Lateral movement containment
 - Firewall anomaly investigation
+- Correlation-based response (auth + network events)
 - Full purple-team scenario writeups (attack → detect → respond)
