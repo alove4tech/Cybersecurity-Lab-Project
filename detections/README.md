@@ -44,12 +44,15 @@ Each use case includes:
 - UC-001 – SSH Brute Force Detection
 - UC-002 – Kerberos RC4 Service Ticket Monitoring
 
+### Network Monitoring
+- UC-003 – Lateral Movement Detection (Network Scanning)
+
 ### Planned Expansions
 - Password spray (multi-user 4625 burst)
 - Privileged logon anomaly (4672 correlation)
 - Kerberos TGT volume anomalies (4768)
-- Lateral movement detection (SMB / admin shares)
-- Firewall anomaly detection
+- Firewall anomaly detection (blocked external access, port sweep)
+- Correlation rules (auth + network events)
 
 ---
 
@@ -70,6 +73,12 @@ This helps track detection coverage growth over time.
 - T1110 – Brute Force
 - T1110.003 – Password Spraying
 - T1558.003 – Kerberoasting
+- T1021 – Remote Services (Lateral Movement)
+- T1021.001 – Remote Desktop Protocol
+- T1021.004 – SSH
+- T1595 – Active Scanning
+- T1595.001 – Port Scanning
+- T1595.002 – Content Scanning
 
 Additional techniques will be mapped as new use cases are developed.
 
