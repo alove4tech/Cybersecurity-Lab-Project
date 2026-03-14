@@ -62,8 +62,9 @@ Linux telemetry:
 
 **Network Monitoring:**
 - UC-003 – Lateral movement detection (network scanning)
-- UC-004 – Blocked external access attempts (planned)
-- UC-005 – Port sweep / reconnaissance (planned)
+- UC-004 – Password spraying detection (Windows AD, Event ID 4625)
+- UC-005 – Blocked external access attempts (planned)
+- UC-006 – Port sweep / reconnaissance (planned)
 
 **Correlation Rules:**
 - Credential abuse (failed auth + network activity)
@@ -90,6 +91,7 @@ Each use-case includes:
 ✔ Incident response playbooks documented (PB-001, PB-002, PB-003)
 ✔ Case studies validated (CS-001, CS-002, CS-003)
 ✔ Wazuh deployment guide complete
+✔ Password spraying detection validated (UC-004, Rule IDs 100200, 100201)
 ✔ pfSense syslog integration documented  
 
 ---
