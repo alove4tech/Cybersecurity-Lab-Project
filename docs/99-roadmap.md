@@ -15,7 +15,7 @@
   - Dashboard visualization plan included
 - [ ] Kerberos & AD detections:
   - [ ] 4768/4769 volume anomalies (Kerberoasting signal)
-  - [ ] 4625 burst / password spray patterns
+  - [x] 4625 burst / password spray patterns (UC-004 documented)
   - [ ] 4672 privileged logon correlation
 - [ ] Incident Response playbooks:
   - [x] PB-003: Lateral Movement response documented

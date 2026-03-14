@@ -397,3 +397,143 @@ Add pfSense syslog integration and network-based detection use cases
 - Document 10 Wazuh rules (100100, 100200-100401, 100500-100700)
 - Map 6 new MITRE ATT&CK techniques (T1021, T1595)
 ```
+
+---
+
+## Session Progress - March 14, 2026
+
+### 6. UC-004: Windows AD Password Spraying Detection
+**File:** `detections/use-cases/uc-004-password-spraying-detection.md`
+
+Created comprehensive password spraying detection use case:
+
+**Detection Metadata:**
+- Detection ID: UC-004
+- Log Source: Windows Security Event Log (Event ID 4625)
+- Platform: Windows Server 2022 AD
+- SIEM: Wazuh
+- Severity: High
+- MITRE ATT&CK: T1110.003 (Password Spraying), T1110 (Brute Force)
+
+**Lab Environment:**
+- Domain Controller (DC01): 10.10.69.10
+- SIEM (Wazuh): 10.10.69.20
+- Attacker Host (debianpen): 10.10.69.50
+- Test accounts: spray.test1 through spray.test5 in SprayLab group
+
+**Detection Logic:**
+
+**Rule 1 (ID 100200)** - Base failed network logon:
+- Triggers on Event ID 4625 with logonType 3 and subStatus 0xc000006a
+- Parent rule: 60122 (Windows failed logon)
+- Level: 6 (Medium)
+
+**Rule 2 (ID 100201)** - Password spraying correlation:
+- 5+ failed logons within 300 seconds
+- Same source IP (`same_field ipAddress`)
+- Different usernames (`different_field targetUserName`)
+- Level: 10 (High)
+
+**Validation Procedure:**
+
+1. **Environment Setup:**
+   - Created 5 test AD accounts (spray.test1-5)
+   - Verified domain lockout policy for safe testing
+
+2. **Wazuh Agent Troubleshooting:**
+   - **Issue:** Agent disconnected, wazuh-remoted not running
+   - **Fix:** Restarted Wazuh manager, verified port 1514 listening
+   - Agent reconnected successfully
+
+3. **Log Collection Verification:**
+   - Generated single failed login
+   - Confirmed Event ID 4625 reaching Wazuh with required fields
+
+4. **Rule Development:**
+   - **Issue:** Initial rule failed due to parent rule requirement
+   - **Fix:** Used `wazuh-logtest` to identify parent rule (60122)
+   - Rewrote rule using `if_sid` with proper field filters
+
+5. **Attack Simulation:**
+   - **Attempt 1 - Hydra:** Failed due to SMB signing requirements
+   - **Attempt 2 - NetExec:** Successfully installed via pipx from GitHub
+   - **Command:** `netexec smb 10.10.69.10 -u spray.test1,spray.test2,spray.test3,spray.test4,spray.test5 -p "BadP@ssw0rd123!" --local-auth`
+
+6. **Detection Confirmation:**
+   - Verified alert fired: "Windows: Possible password spraying detected from 10.10.69.50 across multiple usernames"
+   - End-to-end detection validated
+
+**Key Learnings:**
+- Monitor `wazuh-remoted` service for agent connectivity
+- Always identify parent rule using `wazuh-logtest` before writing custom rules
+- NetExec provides better SMB support for modern Windows than Hydra
+- Threshold tuning requires testing against normal user behavior
+
+**Status:** ✅ Complete
+
+**Repository Updates:**
+- Created: `detections/use-cases/uc-004-password-spraying-detection.md` (10.3 KB)
+- Updated: `README.md` - Added UC-004 to detection highlights
+- Updated: `docs/99-roadmap.md` - Marked password spray as complete
+- Custom Wazuh rules: IDs 100200, 100201
+
+---
+
+## Updated Progress Summary
+
+| Item | Status |
+|------|--------|
+| Wazuh deployment documentation | ✅ Complete |
+| pfSense syslog integration | ✅ Complete |
+| UC-003 lateral movement detection | ✅ Complete |
+| PB-003 lateral movement playbook | ✅ Complete |
+| CS-003 lateral movement case study | ✅ Complete |
+| Correlation rules | ✅ Documented |
+| Dashboard visualization plan | ✅ Documented |
+| UC-004 password spraying detection | ✅ Complete |
+| UC-004 blocked external access | 🔵 Planned (renumbered to UC-005) |
+| UC-005 port sweep | 🔵 Planned (renumbered to UC-006) |
+| 4768/4769 anomaly detection | 🔵 In Progress |
+| 4672 privileged logon correlation | 🔵 In Progress |
+
+**Overall Progress:** Detection engineering portfolio expanding with validated AD security use cases
+
+---
+
+## Key Achievements (Updated)
+
+1. **Comprehensive pfSense syslog integration guide** - End-to-end documentation from pfSense to Wazuh
+2. **Network-based detection capabilities** - Three new detection use cases with correlation
+3. **Complete incident response coverage** - Playbook + case study for lateral movement
+4. **Validated AD detection engineering** - Password spraying detection with end-to-end testing
+5. **Scalable detection framework** - Thresholds, frequency configuration, and correlation rules
+6. **Professional-grade documentation** - Detection lifecycle fully documented from simulation to hardening
+7. **Real-world troubleshooting** - Agent connectivity, rule development, attack tool compatibility
+
+---
+
+## Repository Ready for Commit
+
+Updated repository now includes:
+- Complete pfSense syslog integration documentation
+- Three network-based detection use cases
+- Password spraying detection with validation
+- Correlation rules for auth + network events
+- Comprehensive lateral movement detection and response
+- Updated README and roadmap reflecting progress
+- Documented 12 Wazuh rules (100100, 100200-100401, 100500-100700, 100200, 100201)
+- Mapped 8 MITRE ATT&CK techniques (T1021, T1595, T1110.003, T1110)
+
+**Recommendation:** Commit with message like:
+```
+Add Windows AD password spraying detection (UC-004)
+
+- Create UC-004 password spraying detection use case
+- Implement Wazuh rules 100200 (failed logon) and 100201 (correlation)
+- Document end-to-end validation with NetExec attack simulation
+- Include troubleshooting for agent connectivity and rule development
+- Update README with new detection capability
+- Update roadmap marking password spray as complete
+- Document MITRE ATT&CK T1110.003 mapping
+- Add threshold tuning and false positive considerations
+```
