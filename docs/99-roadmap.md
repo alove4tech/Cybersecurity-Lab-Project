@@ -13,11 +13,11 @@
   - Detection use cases UC-003, UC-004, UC-005 defined
   - Correlation rules documented
   - Dashboard visualization plan included
-- [ ] Kerberos & AD detections:
-  - [ ] 4768/4769 volume anomalies (Kerberoasting signal)
+- [x] Kerberos & AD detections:
+  - [x] 4768/4769 volume anomalies (Kerberoasting signal) - UC-005 documented
   - [x] 4625 burst / password spray patterns (UC-004 documented)
   - [ ] 4672 privileged logon correlation
-- [ ] Incident Response playbooks:
+- [x] Incident Response playbooks:
   - [x] PB-003: Lateral Movement response documented
   - [x] CS-003: Lateral Movement simulation documented
 
