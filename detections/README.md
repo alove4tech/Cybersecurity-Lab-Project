@@ -43,6 +43,7 @@ Each use case includes:
 ### Authentication Monitoring
 - UC-001 – SSH Brute Force Detection
 - UC-002 – Kerberos RC4 Service Ticket Monitoring
+- UC-005 – Kerberos Anomaly Detection (Kerberoasting)
 
 ### Network Monitoring
 - UC-003 – Lateral Movement Detection (Network Scanning)
@@ -72,7 +73,7 @@ This helps track detection coverage growth over time.
 
 - T1110 – Brute Force
 - T1110.003 – Password Spraying
-- T1558.003 – Kerberoasting
+- T1558.003 – Kerberoasting (RC4 + Correlation)
 - T1021 – Remote Services (Lateral Movement)
 - T1021.001 – Remote Desktop Protocol
 - T1021.004 – SSH
