@@ -59,12 +59,14 @@ Linux telemetry:
 **Authentication Monitoring:**
 - UC-001 – SSH brute force detection (Linux auth.log)
 - UC-002 – Kerberos RC4 service ticket detection (Kerberoasting signal)
+- UC-005 – Kerberos anomaly detection (correlation rules for Kerberoasting patterns)
 
 **Network Monitoring:**
 - UC-003 – Lateral movement detection (network scanning)
 - UC-004 – Password spraying detection (Windows AD, Event ID 4625)
-- UC-005 – Blocked external access attempts (planned)
-- UC-006 – Port sweep / reconnaissance (planned)
+- UC-005 – Kerberos anomaly detection (correlation rules for Kerberoasting)
+- UC-006 – Blocked external access attempts (planned)
+- UC-007 – Port sweep / reconnaissance (planned)
 
 **Correlation Rules:**
 - Credential abuse (failed auth + network activity)
@@ -87,11 +89,12 @@ Each use-case includes:
 ✔ Advanced audit policies enabled
 ✔ Kerberos telemetry validated
 ✔ RC4 downgrade reproduced and remediated
-✔ Custom Wazuh rules deployed (IDs: 100100, 100200-100401, 100500-100700)
+✔ Custom Wazuh rules deployed (IDs: 100100, 100200-100201, 100300-100303)
 ✔ Incident response playbooks documented (PB-001, PB-002, PB-003)
 ✔ Case studies validated (CS-001, CS-002, CS-003)
 ✔ Wazuh deployment guide complete
 ✔ Password spraying detection validated (UC-004, Rule IDs 100200, 100201)
+✔ Kerberos anomaly detection validated (UC-005, Rule IDs 100300-100303)
 ✔ pfSense syslog integration documented  
 
 ---
@@ -118,7 +121,7 @@ Near-Term (Complete):
 
 Mid-Term (In Progress):
 - 🔵 4625 burst + password spray correlation
-- 🔵 4768/4769 anomaly detection
+- ✅ 4768/4769 anomaly detection (UC-005)
 - 🔵 4672 privileged logon correlation
 - 🔵 Dashboard visualization and metrics
 

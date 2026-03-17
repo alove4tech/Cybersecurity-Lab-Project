@@ -362,10 +362,10 @@ Trigger alert when:
 
 ---
 
-### UC-005: Port Sweep / Network Recon
+### UC-006: Port Sweep / Network Recon
 
 **Detection Metadata:**
-- Detection ID: UC-005
+- Detection ID: UC-006
 - Log Source: pfSense firewall logs
 - Severity: High
 - MITRE ATT&CK: T1595 – Active Scanning
@@ -532,7 +532,7 @@ Create a new dashboard in Wazuh with these panels:
 - [ ] Logs visible in Wazuh Dashboard → Events viewer
 - [ ] UC-003 lateral movement detection validated
 - [ ] UC-004 blocked external access validated
-- [ ] UC-005 port sweep detection validated
+- [ ] UC-006 port sweep detection validated
 - [ ] Correlation rules tested
 - [ ] Dashboard panels configured
 
