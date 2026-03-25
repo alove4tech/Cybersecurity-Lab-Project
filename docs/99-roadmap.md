@@ -10,7 +10,7 @@
 ## Mid-term
 - [x] pfSense → SIEM ingestion (syslog) + dashboards
   - Complete documentation with Wazuh configuration
-  - Detection use cases UC-003, UC-004, UC-005 defined
+  - Detection use cases UC-003, UC-004, UC-005, UC-006 defined
   - Correlation rules documented
   - Dashboard visualization plan included
 - [x] Kerberos & AD detections:
