@@ -59,14 +59,14 @@ Linux telemetry:
 **Authentication Monitoring:**
 - UC-001 – SSH brute force detection (Linux auth.log)
 - UC-002 – Kerberos RC4 service ticket detection (Kerberoasting signal)
+- UC-004 – Password spraying detection (Windows AD, Event ID 4625)
 - UC-005 – Kerberos anomaly detection (correlation rules for Kerberoasting patterns)
+- UC-006 – Privileged logon correlation detection (Windows Event ID 4672)
 
 **Network Monitoring:**
 - UC-003 – Lateral movement detection (network scanning)
-- UC-004 – Password spraying detection (Windows AD, Event ID 4625)
-- UC-005 – Kerberos anomaly detection (correlation rules for Kerberoasting)
-- UC-006 – Blocked external access attempts (planned)
-- UC-007 – Port sweep / reconnaissance (planned)
+- UC-007 – Blocked external access attempts (planned)
+- UC-008 – Port sweep / reconnaissance (planned)
 
 **Correlation Rules:**
 - Credential abuse (failed auth + network activity)
@@ -89,12 +89,13 @@ Each use-case includes:
 ✔ Advanced audit policies enabled
 ✔ Kerberos telemetry validated
 ✔ RC4 downgrade reproduced and remediated
-✔ Custom Wazuh rules deployed (IDs: 100100, 100200-100201, 100300-100303)
+✔ Custom Wazuh rules deployed (IDs: 100100, 100200-100201, 100300-100303, 100500)
 ✔ Incident response playbooks documented (PB-001, PB-002, PB-003)
 ✔ Case studies validated (CS-001, CS-002, CS-003)
 ✔ Wazuh deployment guide complete
 ✔ Password spraying detection validated (UC-004, Rule IDs 100200, 100201)
 ✔ Kerberos anomaly detection validated (UC-005, Rule IDs 100300-100303)
+✔ Privileged logon correlation detection validated (UC-006, Rule ID 100500)
 ✔ pfSense syslog integration documented  
 
 ---
@@ -120,9 +121,9 @@ Near-Term (Complete):
 - ✅ Lateral movement response playbooks (PB-003)
 
 Mid-Term (In Progress):
-- 🔵 4625 burst + password spray correlation
+- ✅ 4625 burst + password spray correlation (UC-004)
 - ✅ 4768/4769 anomaly detection (UC-005)
-- 🔵 4672 privileged logon correlation
+- ✅ 4672 privileged logon correlation (UC-006)
 - 🔵 Dashboard visualization and metrics
 
 Long-Term:
