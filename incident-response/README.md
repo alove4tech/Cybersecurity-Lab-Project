@@ -84,8 +84,8 @@ The lab emphasizes:
 
 ## Future Expansions
 
-- Password spray response
-- Privileged escalation response
+- PB-004 – Privileged logon / privileged escalation response
+- CS-004 – Privileged logon correlation validation
 - Firewall anomaly investigation
 - Correlation-based response (auth + network events)
 - Full purple-team scenario writeups (attack → detect → respond)

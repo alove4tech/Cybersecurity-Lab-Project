@@ -43,17 +43,18 @@ Each use case includes:
 ### Authentication Monitoring
 - UC-001 – SSH Brute Force Detection
 - UC-002 – Kerberos RC4 Service Ticket Monitoring
+- UC-004 – Password Spraying Detection
 - UC-005 – Kerberos Anomaly Detection (Kerberoasting)
+- UC-006 – Privileged Logon Correlation Detection
 
 ### Network Monitoring
 - UC-003 – Lateral Movement Detection (Network Scanning)
 
 ### Planned Expansions
-- Password spray (multi-user 4625 burst)
-- Privileged logon anomaly (4672 correlation)
 - Kerberos TGT volume anomalies (4768)
 - Firewall anomaly detection (blocked external access, port sweep)
 - Correlation rules (auth + network events)
+- Baseline-driven privileged activity anomaly detection
 
 ---
 
