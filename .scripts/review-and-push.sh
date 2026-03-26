@@ -7,9 +7,10 @@ set -euo pipefail
 
 REPO_DIR="/home/claw/.openclaw/workspace/labs/github/Cybersecurity-Lab-Project"
 SCRIPT_DIR="$REPO_DIR/.scripts"
-LOG_FILE="$SCRIPT_DIR/review.log"
+LOG_DIR="/home/claw/.openclaw/logs"
+LOG_FILE="$LOG_DIR/cybersecurity-lab-review.log"
 
-mkdir -p "$SCRIPT_DIR"
+mkdir -p "$SCRIPT_DIR" "$LOG_DIR"
 
 log() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
