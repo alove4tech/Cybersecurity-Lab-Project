@@ -22,7 +22,7 @@ within a defined time window to identify brute force or password spray activity.
 
 ## Log Source & Field Mapping
 
-Example log entry: 
+Example log entry:
 - Failed password for invalid user testuser from 10.10.69.50 port 54432 ssh2
 
 Key Fields Parsed:
@@ -103,8 +103,8 @@ Mitigation:
 
 ## Detection Maturity
 
-✔ Validated in lab  
-✔ Threshold tuned  
-✔ Correlation logic defined  
-✔ Playbook documented (PB-001)  
+✔ Validated in lab
+✔ Threshold tuned
+✔ Correlation logic defined
+✔ Playbook documented (PB-001)
 ✔ Case study documented (CS-001)

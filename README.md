@@ -96,7 +96,7 @@ Each use-case includes:
 ✔ Password spraying detection validated (UC-004, Rule IDs 100200, 100201)
 ✔ Kerberos anomaly detection validated (UC-005, Rule IDs 100300-100303)
 ✔ Privileged logon correlation detection validated (UC-006, Rule ID 100500)
-✔ pfSense syslog integration documented  
+✔ pfSense syslog integration documented
 
 ---
 
@@ -108,7 +108,7 @@ Each use-case includes:
 - Wazuh Deployment → docs/04-wazuh-deployment.md
 - Detection Engineering Overview → detections/
 - Incident Response Overview → incident-response/
-- Roadmap → docs/99-roadmap.md  
+- Roadmap → docs/99-roadmap.md
 
 ---
 

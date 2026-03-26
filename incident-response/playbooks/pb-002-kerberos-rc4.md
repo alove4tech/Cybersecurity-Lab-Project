@@ -1,8 +1,8 @@
 # PB-002: Kerberos RC4 Service Ticket Alert
 
 ## Alert Trigger
-Detection ID: UC-002  
-Event ID: 4769  
+Detection ID: UC-002
+Event ID: 4769
 Condition: TicketEncryptionType = 0x17 (RC4)
 
 ---

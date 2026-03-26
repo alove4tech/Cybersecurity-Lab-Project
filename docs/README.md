@@ -14,10 +14,10 @@ The goal of this project is to bridge offensive techniques with defensive monito
 
 # Architecture Summary
 
-**Cyberlab Network:** 10.10.69.0/24  
-**Firewall:** pfSense (10.10.69.1)  
-**Domain Controller:** DC01 (10.10.69.10)  
-**Domain:** corp.local  
+**Cyberlab Network:** 10.10.69.0/24
+**Firewall:** pfSense (10.10.69.1)
+**Domain Controller:** DC01 (10.10.69.10)
+**Domain:** corp.local
 
 # Security Telemetry Validated
 
