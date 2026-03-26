@@ -1,7 +1,7 @@
 # Lab Architecture & Network Segmentation
 
 ## Overview
-This homelab is designed as an **isolated cybersecurity environment** for practicing detection engineering, incident response, and adversary emulation.  
+This homelab is designed as an **isolated cybersecurity environment** for practicing detection engineering, incident response, and adversary emulation.
 All lab systems are segmented from the home network using pfSense.
 
 ---

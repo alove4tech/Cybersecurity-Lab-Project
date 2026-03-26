@@ -1,8 +1,8 @@
 # PB-001: Brute Force / Password Spraying (Linux SSH)
 
 ## Detection Context
-Detection ID: UC-001  
-Log Source: /var/log/auth.log  
+Detection ID: UC-001
+Log Source: /var/log/auth.log
 Severity: Medium (High if successful login occurs)
 
 ---

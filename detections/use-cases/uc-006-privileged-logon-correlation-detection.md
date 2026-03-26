@@ -249,13 +249,13 @@ When this alert triggers:
 
 ## Detection Maturity
 
-✔ Event ID 4672 validated in lab environment  
-✔ Event ID 4624 correlation verified by Logon ID  
-✔ Custom Wazuh rule created and validated  
-✔ Remote administrative test activity generated  
-✔ False positive considerations documented  
-✔ Hardening recommendations documented  
-⏳ Full automated SIEM correlation – future enhancement  
+✔ Event ID 4672 validated in lab environment
+✔ Event ID 4624 correlation verified by Logon ID
+✔ Custom Wazuh rule created and validated
+✔ Remote administrative test activity generated
+✔ False positive considerations documented
+✔ Hardening recommendations documented
+⏳ Full automated SIEM correlation – future enhancement
 ⏳ Baseline-driven anomaly detection – future enhancement
 
 ---
