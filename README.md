@@ -1,132 +1,56 @@
-# Cybersecurity Homelab (SOC + Detection Lab)
+# Cybersecurity Homelab
 
-This repository documents a segmented cybersecurity homelab designed to practice:
+SOC + detection lab running on Proxmox. Isolated VLAN (10.10.69.0/24) with Active Directory, Wazuh SIEM, and attack hosts for detection engineering and IR practice.
 
-- Defensive monitoring
-- Detection engineering
-- Incident response
-- Adversary emulation
+## Network
 
-The environment generates realistic enterprise telemetry (Active Directory, Kerberos, Windows Security logs, Linux auth logs, firewall logs) and validates detections using controlled attack scenarios.
+- **Hypervisor:** Proxmox VE
+- **Firewall:** pfSense (10.10.69.1)
+- **Domain Controller:** Windows Server 2022 (10.10.69.10, corp.local)
+- **SIEM:** Wazuh (Windows + Linux agents)
+- **Attack box:** Debian with Kali tools
+- **Targets:** Metasploitable 2/3
 
----
+## Detection workflow
 
-## Architecture Summary
+For each use case I:
 
-- Hypervisor: Proxmox VE
-- Network: 10.10.69.0/24 (isolated Cyberlab VLAN)
-- Firewall: pfSense (10.10.69.1)
-- Identity: Windows Server 2022 AD DS (corp.local)
-- SIEM: Wazuh (Windows + Linux agents)
-- Targets: Metasploitable2/3 + Debian attack host
+1. Run a controlled attack
+2. Check raw logs at the source
+3. Write a Wazuh rule
+4. Verify the alert fires
+5. Document tuning and false positives
+6. Write a response playbook
+7. Apply hardening if applicable
 
----
+## What's built so far
 
-## Detection Lifecycle in This Lab
+| Use Case | Rule ID | Status |
+|----------|---------|--------|
+| SSH brute force | 100100 | Done |
+| Kerberos RC4 (Kerberoasting signal) | 100200 | Done |
+| Lateral movement (network scan) | 100300 | Done |
+| Password spraying (AD) | 100200 | Done |
+| Kerberos anomaly correlation | 100300–100303 | Done |
+| Privileged logon correlation | 100500 | Done |
 
-Each detection follows a structured workflow:
+**Incident response playbooks:** PB-001 (brute force), PB-002 (Kerberos RC4), PB-003 (lateral movement)
+**Case studies:** CS-001, CS-002, CS-003 validated against live telemetry
 
-1. Generate attack telemetry (controlled adversary simulation)
-2. Validate raw logs at source
-3. Create detection logic (Wazuh rule / query)
-4. Trigger alert
-5. Document tuning & false positives
-6. Write response playbook
-7. Implement hardening (where applicable)
+## Docs
 
-This ensures detections are validated, repeatable, and defensible.
+- [Lab overview](docs/00-lab-overview.md)
+- [Architecture diagram](docs/01-architecture-diagram.md)
+- [AD design](docs/02-active-directory-design.md)
+- [Wazuh deployment](docs/04-wazuh-deployment.md)
+- [Detection use cases](detections/)
+- [IR playbooks](incident-response/)
+- [Roadmap](docs/99-roadmap.md)
 
----
+## Next up
 
-## Confirmed Security Telemetry
-
-The following Windows Security events are validated:
-
-- 4624 – Successful logon
-- 4625 – Failed logon
-- 4672 – Privileged logon
-- 4768 – Kerberos TGT request
-- 4769 – Kerberos service ticket request
-
-Linux telemetry:
-- SSH authentication logs
-- Syslog forwarding (in progress)
-
----
-
-## Detection Highlights
-
-**Authentication Monitoring:**
-- UC-001 – SSH brute force detection (Linux auth.log)
-- UC-002 – Kerberos RC4 service ticket detection (Kerberoasting signal)
-- UC-004 – Password spraying detection (Windows AD, Event ID 4625)
-- UC-005 – Kerberos anomaly detection (correlation rules for Kerberoasting patterns)
-- UC-006 – Privileged logon correlation detection (Windows Event ID 4672)
-
-**Network Monitoring:**
-- UC-003 – Lateral movement detection (network scanning)
-- UC-007 – Blocked external access attempts (planned)
-- UC-008 – Port sweep / reconnaissance (planned)
-
-**Correlation Rules:**
-- Credential abuse (failed auth + network activity)
-- Kerberos lateral movement (Kerberos + scanning)
-- Privileged lateral movement (admin logon + network activity)
-
-Each use-case includes:
-- Objective
-- Data sources
-- Detection logic
-- Validation procedure
-- MITRE ATT&CK mapping
-- Hardening actions (where applicable)
-
----
-
-## Current Operational State
-
-✔ AD domain deployed
-✔ Advanced audit policies enabled
-✔ Kerberos telemetry validated
-✔ RC4 downgrade reproduced and remediated
-✔ Custom Wazuh rules deployed (IDs: 100100, 100200-100201, 100300-100303, 100500)
-✔ Incident response playbooks documented (PB-001, PB-002, PB-003)
-✔ Case studies validated (CS-001, CS-002, CS-003)
-✔ Wazuh deployment guide complete
-✔ Password spraying detection validated (UC-004, Rule IDs 100200, 100201)
-✔ Kerberos anomaly detection validated (UC-005, Rule IDs 100300-100303)
-✔ Privileged logon correlation detection validated (UC-006, Rule ID 100500)
-✔ pfSense syslog integration documented
-
----
-
-## Start Here
-
-- Lab Overview → docs/00-lab-overview.md
-- Architecture → docs/01-architecture-diagram.md
-- Active Directory Design → docs/02-active-directory-design.md
-- Wazuh Deployment → docs/04-wazuh-deployment.md
-- Detection Engineering Overview → detections/
-- Incident Response Overview → incident-response/
-- Roadmap → docs/99-roadmap.md
-
----
-
-## Roadmap
-
-Near-Term (Complete):
-- ✅ pfSense syslog ingestion into SIEM
-- ✅ Wazuh deployment documentation
-- ✅ Network-based detection use cases (UC-003)
-- ✅ Lateral movement response playbooks (PB-003)
-
-Mid-Term (In Progress):
-- ✅ 4625 burst + password spray correlation (UC-004)
-- ✅ 4768/4769 anomaly detection (UC-005)
-- ✅ 4672 privileged logon correlation (UC-006)
-- 🔵 Dashboard visualization and metrics
-
-Long-Term:
-- 🔵 Automated lab provisioning scripts (Terraform/Ansible)
-- 🔵 Purple team scenario write-ups (attack → detect → respond)
-- 🔵 Infrastructure-as-Code build automation
+- [ ] pfSense syslog → Wazuh (in progress)
+- [ ] Blocked external access attempts (UC-007)
+- [ ] Port sweep/recon detection (UC-008)
+- [ ] Dashboard visualization
+- [ ] Terraform/Ansible provisioning
