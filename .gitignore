@@ -1,2 +1,13 @@
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*~
+
+# Script logs
+scripts/*.log
 .scripts/*.log
 .scripts/review.log
