@@ -423,12 +423,12 @@ Created comprehensive password spraying detection use case:
 
 **Detection Logic:**
 
-**Rule 1 (ID 100200)** - Base failed network logon:
+**Rule 1 (ID 100600)** - Base failed network logon:
 - Triggers on Event ID 4625 with logonType 3 and subStatus 0xc000006a
 - Parent rule: 60122 (Windows failed logon)
 - Level: 6 (Medium)
 
-**Rule 2 (ID 100201)** - Password spraying correlation:
+**Rule 2 (ID 100601)** - Password spraying correlation:
 - 5+ failed logons within 300 seconds
 - Same source IP (`same_field ipAddress`)
 - Different usernames (`different_field targetUserName`)
@@ -475,7 +475,7 @@ Created comprehensive password spraying detection use case:
 - Created: `detections/use-cases/uc-004-password-spraying-detection.md` (10.3 KB)
 - Updated: `README.md` - Added UC-004 to detection highlights
 - Updated: `docs/99-roadmap.md` - Marked password spray as complete
-- Custom Wazuh rules: IDs 100200, 100201
+- Custom Wazuh rules: IDs 100600, 100601
 
 ---
 
@@ -521,7 +521,7 @@ Updated repository now includes:
 - Correlation rules for auth + network events
 - Comprehensive lateral movement detection and response
 - Updated README and roadmap reflecting progress
-- Documented 12 Wazuh rules (100100, 100200-100401, 100500-100700, 100200, 100201)
+- Documented 12 Wazuh rules (100100, 100600-100401, 100500-100700, 100600, 100601)
 - Mapped 8 MITRE ATT&CK techniques (T1021, T1595, T1110.003, T1110)
 
 **Recommendation:** Commit with message like:
@@ -529,7 +529,7 @@ Updated repository now includes:
 Add Windows AD password spraying detection (UC-004)
 
 - Create UC-004 password spraying detection use case
-- Implement Wazuh rules 100200 (failed logon) and 100201 (correlation)
+- Implement Wazuh rules 100600 (failed logon) and 100601 (correlation)
 - Document end-to-end validation with NetExec attack simulation
 - Include troubleshooting for agent connectivity and rule development
 - Update README with new detection capability

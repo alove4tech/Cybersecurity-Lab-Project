@@ -25,12 +25,12 @@ For each use case I:
 
 ## What's built so far
 
-| Use Case | Rule ID | Status |
-|----------|---------|--------|
-| SSH brute force | 100100 | Done |
-| Kerberos RC4 (Kerberoasting signal) | 100200 | Done |
-| Lateral movement (network scan) | 100300 | Done |
-| Password spraying (AD) | 100200 | Done |
+| Use Case | Rule IDs | Status |
+|----------|----------|--------|
+| SSH brute force | Custom (UC-001) | Done |
+| Kerberos RC4 (Kerberoasting signal) | 100100 | Done |
+| Lateral movement (network scan) | 100200, 100201, 100400, 100401 | Done |
+| Password spraying (AD) | 100600, 100601 | Done |
 | Kerberos anomaly correlation | 100300–100303 | Done |
 | Privileged logon correlation | 100500 | Done |
 
@@ -50,7 +50,7 @@ For each use case I:
 ## Next up
 
 - [ ] pfSense syslog → Wazuh (in progress)
-- [ ] Blocked external access attempts (UC-007)
-- [ ] Port sweep/recon detection (UC-008)
+- [ ] Blocked external access attempts
+- [ ] Port sweep/recon detection
 - [ ] Dashboard visualization
 - [ ] Terraform/Ansible provisioning
