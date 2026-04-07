@@ -50,6 +50,9 @@ Each use case includes:
 ### Network Monitoring
 - UC-003 – Lateral Movement Detection (Network Scanning)
 
+### Endpoint Monitoring
+- UC-007 – Suspicious Process Execution (Sysmon Event ID 1)
+
 ### Planned Expansions
 - Kerberos TGT volume anomalies (4768)
 - Firewall anomaly detection (blocked external access, port sweep)
@@ -81,6 +84,11 @@ This helps track detection coverage growth over time.
 - T1595 – Active Scanning
 - T1595.001 – Port Scanning
 - T1595.002 – Content Scanning
+- T1059.001 – Command and Scripting Interpreter: PowerShell
+- T1003 – OS Credential Dumping
+- T1218 – Signed Binary Proxy Execution
+- T1105 – Ingress Tool Transfer
+- T1047 – Windows Management Instrumentation
 
 Additional techniques will be mapped as new use cases are developed.
 

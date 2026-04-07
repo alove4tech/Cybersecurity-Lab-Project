@@ -71,6 +71,7 @@ The lab emphasizes:
 - PB-001 – SSH Brute Force / Password Spraying
 - PB-002 – Kerberos RC4 Service Ticket Alert
 - PB-003 – Lateral Movement / Network Scanning
+- PB-004 – Suspicious Process Execution
 
 ---
 
@@ -79,13 +80,14 @@ The lab emphasizes:
 - CS-001 – SSH Brute Force Simulation
 - CS-002 – Kerberoasting Simulation
 - CS-003 – Lateral Movement Simulation
+- CS-004 – PowerShell Execution via WMI Simulation
 
 ---
 
 ## Future Expansions
 
-- PB-004 – Privileged logon / privileged escalation response
-- CS-004 – Privileged logon correlation validation
+- PB-005 – Privileged logon / privileged escalation response
+- CS-005 – Privileged logon correlation validation
 - Firewall anomaly investigation
 - Correlation-based response (auth + network events)
 - Full purple-team scenario writeups (attack → detect → respond)
