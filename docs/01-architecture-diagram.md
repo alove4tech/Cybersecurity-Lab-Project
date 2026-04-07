@@ -13,9 +13,14 @@ All lab systems are segmented from the home network using pfSense.
 | Component | IP Address | Notes |
 |---|---|---|
 | pfSense | 10.10.69.1 | Default gateway, firewall, DHCP |
-| Attack / Management VM | DHCP | Debian-based attack host |
-| Metasploitable Targets | DHCP | Vulnerable lab systems |
-| Future AD / SIEM | Static | Logging + authentication |
+| DC01 (Domain Controller) | 10.10.69.10 | Windows Server 2022, corp.local |
+| Wazuh SIEM | 10.10.69.20 | Centralized log collection & alerting |
+| WIN10-CLIENT | DHCP | Domain-joined workstation |
+| WIN11-CLIENT | DHCP | Domain-joined workstation |
+| Debian-Attack | DHCP | Adversary simulation tools |
+| Metasploitable2 | DHCP | Vulnerable Linux target |
+| Metasploitable3-Ubuntu | DHCP | Vulnerable Ubuntu target |
+| Metasploitable3-Win2k8 | DHCP | Vulnerable Windows target |
 
 ---
 
@@ -30,8 +35,8 @@ All lab systems are segmented from the home network using pfSense.
 |
 +---------------- Cyberlab Network (10.10.69.0/24) ----------------+
 | |
-[ Attack VM ] [ Metasploitable2 ] [ Metasploitable3 ] [ Future AD / SIEM ]
-(DHCP) (DHCP) (DHCP) (Static)
+[ Attack VM ] [ WIN10-CL ] [ WIN11-CL ] [ DC01 ] [ Wazuh ] [ Meta2 ] [ Meta3 ]
+ (DHCP) (DHCP) (DHCP) (Static) (Static) (DHCP) (DHCP)
 
 
 ---

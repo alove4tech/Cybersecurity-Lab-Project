@@ -70,7 +70,7 @@ Key fields for detection:
 
 ### Rule 1: Base Failed Network Logon Detection
 
-**Rule ID**: 100200
+**Rule ID**: 100600
 
 Triggers when a failed network logon attempt with bad password is detected:
 
@@ -80,7 +80,7 @@ Triggers when a failed network logon attempt with bad password is detected:
 
 **Wazuh rule configuration**:
 ```xml
-<rule id="100200" level="6">
+<rule id="100600" level="6">
   <if_sid>60122</if_sid>
   <field name="logonType">3</field>
   <field name="subStatus">0xc000006a</field>
@@ -91,7 +91,7 @@ Triggers when a failed network logon attempt with bad password is detected:
 
 ### Rule 2: Password Spraying Correlation
 
-**Rule ID**: 100201
+**Rule ID**: 100601
 
 Correlates multiple failed logons to detect password spraying:
 
@@ -103,8 +103,8 @@ Correlates multiple failed logons to detect password spraying:
 
 **Wazuh rule configuration**:
 ```xml
-<rule id="100201" level="10">
-  <if_sid>100200</if_sid>
+<rule id="100601" level="10">
+  <if_sid>100600</if_sid>
   <if_matched_level>6</if_matched_level>
   <same_field>ipAddress</same_field>
   <different_field>targetUserName</different_field>
@@ -230,10 +230,10 @@ Generated multiple Event ID 4625 events for each username.
 
 Checked Wazuh alerts:
 ```bash
-grep "100201" /var/ossec/logs/alerts/alerts.log
+grep "100601" /var/ossec/logs/alerts/alerts.log
 ```
 
-**Result**: Rule 100201 fired successfully with alert message:
+**Result**: Rule 100601 fired successfully with alert message:
 ```
 Windows: Possible password spraying detected from 10.10.69.50 across multiple usernames
 ```
@@ -301,7 +301,7 @@ Confirmed detection logic works end-to-end.
 ## Detection Maturity
 
 ✔ Validated in lab environment
-✔ Custom Wazuh rules deployed (IDs: 100200, 100201)
+✔ Custom Wazuh rules deployed (IDs: 100600, 100601)
 ✔ Attack simulation performed (NetExec)
 ✔ End-to-end detection confirmed
 ✔ Threshold tuned
