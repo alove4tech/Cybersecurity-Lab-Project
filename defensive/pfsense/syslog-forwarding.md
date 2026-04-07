@@ -531,8 +531,8 @@ Create a new dashboard in Wazuh with these panels:
 - [ ] Wazuh agent configured to monitor pfSense logs
 - [ ] Logs visible in Wazuh Dashboard → Events viewer
 - [ ] UC-003 lateral movement detection validated
-- [ ] UC-007 blocked external access validated
-- [ ] UC-008 port sweep detection validated
+- [ ] UC-008 blocked external access validated
+- [ ] UC-009 port sweep detection validated
 - [ ] Correlation rules tested
 - [ ] Dashboard panels configured
 

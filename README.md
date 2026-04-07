@@ -33,9 +33,10 @@ For each use case I:
 | Password spraying (AD) | 100600, 100601 | Done |
 | Kerberos anomaly correlation | 100300–100303 | Done |
 | Privileged logon correlation | 100500 | Done |
+| Suspicious process execution (Sysmon) | 100800–100804 | Done |
 
-**Incident response playbooks:** PB-001 (brute force), PB-002 (Kerberos RC4), PB-003 (lateral movement)
-**Case studies:** CS-001, CS-002, CS-003 validated against live telemetry
+**Incident response playbooks:** PB-001 (brute force), PB-002 (Kerberos RC4), PB-003 (lateral movement), PB-004 (suspicious process)
+**Case studies:** CS-001, CS-002, CS-003, CS-004 validated against live telemetry
 
 ## Docs
 

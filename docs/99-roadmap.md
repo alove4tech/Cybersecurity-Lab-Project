@@ -19,7 +19,11 @@
   - [x] 4672 privileged logon correlation - UC-006 documented
 - [x] Incident Response playbooks:
   - [x] PB-003: Lateral Movement response documented
+  - [x] PB-004: Suspicious Process Execution response documented
   - [x] CS-003: Lateral Movement simulation documented
+  - [x] CS-004: PowerShell Execution via WMI simulation documented
+- [x] Sysmon deployment on DC01 and Windows clients (Event ID 1 collection via Wazuh)
+- [x] UC-007: Suspicious Process Execution detection (Rules 100800–100804)
 
 ## Long-term
 - [ ] Automated lab build scripts (Terraform/Ansible where possible)
