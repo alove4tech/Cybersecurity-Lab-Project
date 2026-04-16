@@ -119,7 +119,7 @@ Created comprehensive response playbook:
 ---
 
 ### 6. CS-003: Lateral Movement Case Study
-**File:** `incident-response/case-studies/cs-003: Lateral Movement Simulation.md`
+**File:** `incident-response/case-studies/cs-003-lateral-movement-simulation.md`
 
 Created detailed case study:
 - Scenario overview (attacker scanning network)
@@ -208,7 +208,7 @@ Updated to:
 2. `defensive/pfsense/syslog-forwarding.md` (completely rewritten)
 3. `detections/use-cases/uc-003-lateral-movement-detection.md` (new)
 4. `incident-response/playbooks/pb-003-lateral-movement.md` (new)
-5. `incident-response/case-studies/cs-003: Lateral Movement Simulation.md` (new)
+5. `incident-response/case-studies/cs-003-lateral-movement-simulation.md` (new)
 6. `docs/session-progress-2026-03-10.md` (this file)
 
 ### Modified (4 files)

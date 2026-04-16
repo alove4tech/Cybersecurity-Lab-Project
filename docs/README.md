@@ -44,3 +44,9 @@ These events form the baseline for future detection engineering and attack simul
 - pfSense log ingestion into SIEM (syslog → pipeline → dashboards)
 - Detection engineering: additional Kerberos + AD use-cases
 - Incident response playbooks mapped to detections
+
+## Quick links
+
+- [pfSense syslog forwarding notes](../defensive/pfsense/syslog-forwarding.md)
+- [Detection use cases](../detections/README.md)
+- [Incident response playbooks and case studies](../incident-response/README.md)
