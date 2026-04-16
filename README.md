@@ -44,6 +44,7 @@ For each use case I:
 - [Architecture diagram](docs/01-architecture-diagram.md)
 - [AD design](docs/02-active-directory-design.md)
 - [Wazuh deployment](docs/04-wazuh-deployment.md)
+- [pfSense syslog forwarding notes](defensive/pfsense/syslog-forwarding.md)
 - [Detection use cases](detections/)
 - [IR playbooks](incident-response/)
 - [Roadmap](docs/99-roadmap.md)
