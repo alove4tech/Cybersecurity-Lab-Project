@@ -38,6 +38,13 @@ For each use case I:
 **Incident response playbooks:** PB-001 (brute force), PB-002 (Kerberos RC4), PB-003 (lateral movement), PB-004 (suspicious process)
 **Case studies:** CS-001, CS-002, CS-003, CS-004 validated against live telemetry
 
+## Lab artifacts at a glance
+
+- pfSense syslog forwarding notes are documented and tied into the detection workflow
+- Sysmon coverage is in place for process execution visibility on Windows hosts
+- Use case write-ups live under `detections/use-cases/` and map cleanly to the corresponding playbooks
+- Progress snapshots live under `docs/session-progress-*.md` so changes over time are easy to track
+
 ## Docs
 
 - [Lab overview](docs/00-lab-overview.md)
@@ -51,8 +58,8 @@ For each use case I:
 
 ## Next up
 
-- [ ] pfSense syslog → Wazuh (in progress)
 - [ ] Blocked external access attempts
-- [ ] Port sweep/recon detection
-- [ ] Dashboard visualization
-- [ ] Terraform/Ansible provisioning
+- [ ] Port sweep and recon detection coverage
+- [ ] Finish dashboard visualization and evidence capture screenshots
+- [ ] Terraform/Ansible provisioning for repeatable lab builds
+- [ ] Full purple-team scenario write-ups that link attack, alert, and response evidence
