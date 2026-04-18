@@ -7,7 +7,17 @@ Thumbs.db
 .idea/
 *~
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
 # Script logs
 scripts/*.log
 .scripts/*.log
 .scripts/review.log
+
+# Secrets
+.env
+*.key
+*.pem

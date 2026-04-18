@@ -50,6 +50,7 @@ For each use case I:
 - [Lab overview](docs/00-lab-overview.md)
 - [Architecture diagram](docs/01-architecture-diagram.md)
 - [AD design](docs/02-active-directory-design.md)
+- [Network configuration](docs/03-network-configuration.md)
 - [Wazuh deployment](docs/04-wazuh-deployment.md)
 - [pfSense syslog forwarding notes](defensive/pfsense/syslog-forwarding.md)
 - [Detection use cases](detections/)
