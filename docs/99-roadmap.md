@@ -1,30 +1,31 @@
 # Roadmap
 
-## Near-term (1–2 weeks) - ✅ COMPLETE
-- [x] Document lab architecture + segmentation (docs/01-architecture-diagram.md)
-- [x] Document Wazuh deployment + agent onboarding (docs/04-wazuh-deployment.md)
-- [x] UC-002: Kerberos RC4 session key detection + rule documented
-  - Wazuh rule 100100 defined and documented
-  - Evidence section added (screenshots to be captured)
+## Completed
 
-## Mid-term
-- [x] pfSense → SIEM ingestion (syslog) + dashboards
-  - Complete documentation with Wazuh configuration
-  - Detection use cases UC-003, UC-004, UC-005, UC-006 defined
-  - Correlation rules documented
-  - Dashboard visualization plan included
-- [x] Kerberos & AD detections:
-  - [x] 4768/4769 volume anomalies (Kerberoasting signal) - UC-005 documented
-  - [x] 4625 burst / password spray patterns (UC-004 documented)
-  - [x] 4672 privileged logon correlation - UC-006 documented
-- [x] Incident Response playbooks:
-  - [x] PB-003: Lateral Movement response documented
-  - [x] PB-004: Suspicious Process Execution response documented
-  - [x] CS-003: Lateral Movement simulation documented
-  - [x] CS-004: PowerShell Execution via WMI simulation documented
-- [x] Sysmon deployment on DC01 and Windows clients (Event ID 1 collection via Wazuh)
-- [x] UC-007: Suspicious Process Execution detection (Rules 100800–100804)
+- [x] Document lab architecture + segmentation
+- [x] Document Wazuh deployment + agent onboarding
+- [x] pfSense syslog integration → Wazuh
+- [x] UC-001: SSH brute force detection
+- [x] UC-002: Kerberos RC4 service ticket detection (rule 100100)
+- [x] UC-003: Lateral movement / network scan detection (rules 100200–100401)
+- [x] UC-004: Password spraying detection (rules 100600, 100601)
+- [x] UC-005: Kerberos anomaly / Kerberoasting detection (rules 100300–100303)
+- [x] UC-006: Privileged logon correlation detection (rule 100500)
+- [x] UC-007: Suspicious process execution via Sysmon (rules 100800–100804)
+- [x] PB-001 through PB-004: Incident response playbooks
+- [x] CS-001 through CS-004: Case studies with live simulation
+- [x] Correlation rules for auth + network events
+- [x] Dashboard visualization plan
 
-## Long-term
-- [ ] Automated lab build scripts (Terraform/Ansible where possible)
-- [ ] Full "purple team" scenario write-ups (attack → detect → respond)
+## In progress
+
+- [ ] Evidence screenshots for validated detections
+- [ ] Dashboard implementation in Wazuh
+
+## Planned
+
+- [ ] Blocked external access detection
+- [ ] Port sweep and recon detection coverage
+- [ ] Automated lab build scripts (Terraform/Ansible)
+- [ ] Full purple-team scenario write-ups linking attack → alert → response
+- [ ] Wazuh Active Response for auto-blocking scanners
