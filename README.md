@@ -59,8 +59,10 @@ For each use case I:
 
 ## Next up
 
-- [ ] Blocked external access attempts
+- [ ] Evidence screenshots for validated detections
+- [ ] Dashboard implementation in Wazuh
+- [ ] Blocked external access detection
 - [ ] Port sweep and recon detection coverage
-- [ ] Finish dashboard visualization and evidence capture screenshots
 - [ ] Terraform/Ansible provisioning for repeatable lab builds
-- [ ] Full purple-team scenario write-ups that link attack, alert, and response evidence
+- [ ] Full purple-team scenario write-ups (attack → alert → response)
+- [ ] Wazuh Active Response for auto-blocking
