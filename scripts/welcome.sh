@@ -1,4 +1,3 @@
-```bash
 #!/bin/bash
 # Advanced Red Team Command Center Script
 
@@ -19,7 +18,7 @@ MY_IP=$(hostname -I | awk '{print $1}')
 echo -e "Attacker IP:    ${GREEN}$MY_IP${NC}"
 
 # GATEWAY CHECK
-if ping -c 1 10.10.69.1 &> /dev/null; then
+if ping -c 1 -W 2 10.10.69.1 &> /dev/null; then
     echo -e "Lab Gateway:    ${GREEN}ONLINE (10.10.69.1)${NC}"
 else
     echo -e "Lab Gateway:    ${RED}OFFLINE (Check pfSense VM)${NC}"
@@ -38,4 +37,9 @@ if pgrep -f "Responder.py" > /dev/null; then
 else
     echo -e "Responder:      ${RED}STOPPED${NC}"
 fi
+
+echo -e "\n${YELLOW}[ Quick Commands ]${NC}"
+echo -e "  msfconsole              ${GREEN}# Metasploit Framework${NC}"
+echo -e "  responder -I eth0       ${GREEN}# LLMNR/NBT-NS poisoner${NC}"
+echo -e "  nmap -sV 10.10.69.0/24  ${GREEN}# Service scan on lab subnet${NC}"
 echo -e "${BLUE}====================================================${NC}"

@@ -2,6 +2,15 @@
 
 SOC + detection lab running on Proxmox. Isolated VLAN (10.10.69.0/24) with Active Directory, Wazuh SIEM, and attack hosts for detection engineering and IR practice.
 
+## Table of contents
+
+- [Network](#network)
+- [Detection workflow](#detection-workflow)
+- [What's built so far](#whats-built-so-far)
+- [Lab artifacts at a glance](#lab-artifacts-at-a-glance)
+- [Docs](#docs)
+- [Next up](#next-up)
+
 ## Network
 
 - **Hypervisor:** Proxmox VE
@@ -59,7 +68,8 @@ For each use case I:
 
 ## Next up
 
-- [ ] Evidence screenshots for validated detections
+- [ ] Evidence screenshots for validated detections (in progress)
+- [x] Correlation rules for auth + network events
 - [ ] Dashboard implementation in Wazuh
 - [ ] Blocked external access detection
 - [ ] Port sweep and recon detection coverage
