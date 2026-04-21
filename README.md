@@ -53,6 +53,7 @@ For each use case I:
 - Sysmon coverage is in place for process execution visibility on Windows hosts
 - Use case write-ups live under `detections/use-cases/` and map cleanly to the corresponding playbooks
 - Progress snapshots live under `docs/session-progress-*.md` so changes over time are easy to track
+- VM inventory in `assets/vm-inventory.md` tracks all lab hosts and their roles
 
 ## Docs
 
@@ -64,6 +65,7 @@ For each use case I:
 - [pfSense syslog forwarding notes](defensive/pfsense/syslog-forwarding.md)
 - [Detection use cases](detections/)
 - [IR playbooks](incident-response/)
+- [VM inventory](assets/vm-inventory.md)
 - [Roadmap](docs/99-roadmap.md)
 
 ## Next up
