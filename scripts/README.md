@@ -1,5 +1,20 @@
-### 🧠 Technical Logic Breakdown
-To ensure the reliability of the command center, the script utilizes several standard Linux utilities to parse system data:
+# Scripts
+
+Utility scripts for the attack and management hosts.
+
+## welcome.sh
+
+A command-center dashboard for the Debian attack host. Run it on login to get a quick status overview of the lab network, services, and common tools.
+
+```bash
+chmod +x welcome.sh
+./welcome.sh
+# or add to ~/.bashrc for auto-run on login
+```
+
+### Technical Logic Breakdown
+
+The script uses several standard Linux utilities to parse system data:
 
 * **`hostname -I | awk '{print $1}'`**: This retrieves the system's IP address. `awk` is used here as a pattern scanner to grab only the first network interface address, ensuring the dashboard remains clean even if multiple virtual bridges are present.
 * **`pgrep -f "Responder.py"`**: Instead of just checking if a service is "enabled," `pgrep` looks for the actual running process by name. This provides a more accurate "Real-Time" status of offensive tools that may not run as standard system services.
