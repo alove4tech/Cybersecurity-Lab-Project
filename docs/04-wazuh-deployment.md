@@ -45,11 +45,13 @@ Wazuh serves as the SIEM (Security Information and Event Management) platform fo
 
 ### Server Information
 
-- **Hostname:** TBD
-- **IP Address:** TBD
-- **Operating System:** TBD (likely Debian/Ubuntu or Wazuh All-In-One)
-- **Wazuh Version:** TBD
-- **Deployment Method:** TBD (Docker, All-In-One package, or individual components)
+- **Hostname:** `wazuh-server`
+- **IP Address:** reserve a static address on the lab VLAN, preferably `10.10.69.20`
+- **Operating System:** Debian or Ubuntu LTS
+- **Wazuh Version:** 4.8.x target for this build
+- **Deployment Method:** All-in-One install first, split components later only if scale or tuning requires it
+
+This keeps the first deployment simple and matches the rest of the lab, which is already standardized on the `10.10.69.0/24` isolated VLAN behind pfSense.
 
 ### Component Versions
 
@@ -95,7 +97,7 @@ apt-get update
 apt-get install wazuh-agent
 
 # Configure agent (edit /var/ossec/etc/ossec.conf)
-# Set <server><address>10.10.69.X</address></server>
+# Set <server><address>10.10.69.20</address></server>
 
 # Start agent
 systemctl daemon-reload
@@ -108,7 +110,7 @@ systemctl start wazuh-agent
 ```powershell
 # Download Wazuh agent MSI
 # Install via command line with manager IP
-msiexec.exe /i wazuh-agent-4.8.0-1.msi /q WAZUH_MANAGER="10.10.69.X" WAZUH_AGENT_GROUP="windows"
+msiexec.exe /i wazuh-agent-4.8.0-1.msi /q WAZUH_MANAGER="10.10.69.20" WAZUH_AGENT_GROUP="windows"
 
 # Start agent (auto-starts as service)
 # Verify: Get-Service Wazuh
@@ -119,7 +121,7 @@ msiexec.exe /i wazuh-agent-4.8.0-1.msi /q WAZUH_MANAGER="10.10.69.X" WAZUH_AGENT
 pfSense does not run a native Wazuh agent. Instead, logs are forwarded via syslog:
 
 1. Configure remote syslog in pfSense: Status → System Logs → Settings
-2. Set remote log server to Wazuh manager IP (10.10.69.X)
+2. Set remote log server to Wazuh manager IP (`10.10.69.20`)
 3. Use UDP 514 (or TLS 6514 for encrypted)
 4. Enable log categories: Firewall, DHCP, System, VPN
 5. Verify ingestion in Wazuh Dashboard → Events viewer
@@ -130,11 +132,11 @@ pfSense does not run a native Wazuh agent. Instead, logs are forwarded via syslo
 
 | Hostname | IP Address | OS | Agent Type | Log Sources | Status |
 |----------|------------|-------|-------------|--------------|--------|
-| wazuh-server | 10.10.69.X | Linux | Manager/Server | All telemetry | ✔ Active |
-| dc01 | 10.10.69.10 | Windows Server 2022 | Wazuh Agent | Windows Security (4624, 4625, 4672, 4768, 4769) | ✔ Active |
-| win10-client | 10.10.69.X | Windows 10 | Wazuh Agent | Windows Security | ✔ Active |
-| win11-client | 10.10.69.X | Windows 11 | Wazuh Agent | Windows Security | ✔ Active |
-| attack-vm | 10.10.69.X | Debian/Ubuntu | Wazuh Agent | /var/log/auth.log, syslog | ✔ Active |
+| wazuh-server | 10.10.69.20 | Linux | Manager/Server | All telemetry | ⏳ Planned |
+| dc01 | 10.10.69.10 | Windows Server 2022 | Wazuh Agent | Windows Security (4624, 4625, 4672, 4768, 4769) | ⏳ Planned |
+| win10-client | DHCP reservation recommended | Windows 10 | Wazuh Agent | Windows Security | ⏳ Planned |
+| win11-client | DHCP reservation recommended | Windows 11 | Wazuh Agent | Windows Security | ⏳ Planned |
+| Debian-Attack | DHCP reservation recommended | Debian/Ubuntu | Wazuh Agent | /var/log/auth.log, syslog | ⏳ Planned |
 | pfSense | 10.10.69.1 | pfSense | Syslog Forwarder | Firewall, DHCP, System | ⏳ Planned |
 
 ---
@@ -259,7 +261,7 @@ Log categories to forward:
 tail -f /var/ossec/logs/ossec.log
 
 # Test connectivity to manager
-telnet 10.10.69.X 1514
+telnet 10.10.69.20 1514
 ```
 
 ### Logs Not Ingesting
@@ -279,6 +281,8 @@ telnet 10.10.69.X 1514
 
 ## Next Steps
 
+- [ ] Stand up `wazuh-server` at `10.10.69.20` and document final package versions
+- [ ] Enroll DC01 first, then the two Windows clients, then Debian-Attack
 - [ ] Complete pfSense syslog forwarding integration
 - [ ] Implement 4625 burst + password spray correlation
 - [ ] Build correlation rules for lateral movement detection
