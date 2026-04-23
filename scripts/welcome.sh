@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Advanced Red Team Command Center Script
+set -euo pipefail
 
 # Colors for UI
 GREEN='\033[0;32m'
@@ -18,7 +19,7 @@ MY_IP=$(hostname -I | awk '{print $1}')
 echo -e "Attacker IP:    ${GREEN}$MY_IP${NC}"
 
 # GATEWAY CHECK
-if ping -c 1 -W 2 10.10.69.1 &> /dev/null; then
+if ping -c 1 -W 2 10.10.69.1 >/dev/null 2>&1; then
     echo -e "Lab Gateway:    ${GREEN}ONLINE (10.10.69.1)${NC}"
 else
     echo -e "Lab Gateway:    ${RED}OFFLINE (Check pfSense VM)${NC}"
@@ -32,7 +33,7 @@ else
     echo -e "Metasploit DB:  ${RED}INACTIVE${NC}"
 fi
 
-if pgrep -f "Responder.py" > /dev/null; then
+if pgrep -f "Responder.py" > /dev/null 2>&1; then
     echo -e "Responder:      ${GREEN}RUNNING${NC}"
 else
     echo -e "Responder:      ${RED}STOPPED${NC}"

@@ -21,3 +21,11 @@ scripts/*.log
 .env
 *.key
 *.pem
+
+# EditorConfig cache
+.editorconfig
+
+# Common archives people accidentally commit
+*.zip
+*.tar.gz
+*.7z
