@@ -22,8 +22,7 @@ scripts/*.log
 *.key
 *.pem
 
-# EditorConfig cache
-.editorconfig
+# EditorConfig (keep .editorconfig in the repo if added)
 
 # Common archives people accidentally commit
 *.zip
