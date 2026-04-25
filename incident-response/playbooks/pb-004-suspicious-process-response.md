@@ -346,6 +346,6 @@ To test this playbook:
 - MITRE ATT&CK T1059.001: https://attack.mitre.org/techniques/T1059/001/
 - MITRE ATT&CK T1003: https://attack.mitre.org/techniques/T1003/
 - MITRE ATT&CK T1047: https://attack.mitre.org/techniques/T1047/
-- Sysmon: https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon
+- Sysmon: https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
 - Wazuh Active Response: https://documentation.wazuh.com/current/user-manual/capabilities/active-response/index.html
 - NIST SP 800-61 – Incident Response Guide

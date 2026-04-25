@@ -525,6 +525,6 @@ ps aux | grep -E "impacket|python"
 - MITRE ATT&CK T1003: https://attack.mitre.org/techniques/T1003/
 - MITRE ATT&CK T1047: https://attack.mitre.org/techniques/T1047/
 - Impacket: https://github.com/SecureAuthCorp/impacket
-- Sysmon: https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon
+- Sysmon: https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
 - LOLBAS Project: https://lolbas-project.github.io/
 - NIST SP 800-61 – Incident Response Guide

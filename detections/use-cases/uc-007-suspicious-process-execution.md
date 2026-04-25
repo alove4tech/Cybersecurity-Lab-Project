@@ -411,6 +411,6 @@ Get-EventLog -LogName Security -Newest 10
 - MITRE ATT&CK T1218: https://attack.mitre.org/techniques/T1218/
 - MITRE ATT&CK T1105: https://attack.mitre.org/techniques/T1105/
 - MITRE ATT&CK T1047: https://attack.mitre.org/techniques/T1047/
-- Sysmon Documentation: https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon
+- Sysmon Documentation: https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
 - Wazuh Rules Documentation: https://documentation.wazuh.com/current/user-manual/ruleset/rules.html
 - LOLBAS Project: https://lolbas-project.github.io/

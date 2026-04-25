@@ -55,16 +55,14 @@ This keeps the first deployment simple and matches the rest of the lab, which is
 
 ### Component Versions
 
-- **Wazuh Manager:** v4.x
+- **Wazuh Manager:** v4.8.x
 - **Wazuh Indexer:** OpenSearch
 - **Wazuh Dashboard:** Kibana-based
 - **Filebeat:** Latest compatible
 
 ### Installation Method
 
-[Document installation approach - e.g., All-In-One installer or Docker Compose]
-
-**Example All-In-One Installation:**
+All-In-One installation (single-node deployment for lab scale):
 ```bash
 # Download Wazuh installation script
 curl -sO https://packages.wazuh.com/4.8/wazuh-install.sh
