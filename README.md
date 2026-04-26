@@ -78,3 +78,21 @@ For each use case I:
 - [ ] Terraform/Ansible provisioning for repeatable lab builds
 - [ ] Full purple-team scenario write-ups (attack → alert → response)
 - [ ] Wazuh Active Response for auto-blocking
+
+## MITRE ATT&CK Coverage
+
+| Technique | Name | Detection |
+|-----------|------|-----------|
+| T1110 | Brute Force | UC-001 |
+| T1110.003 | Password Spraying | UC-001, UC-004 |
+| T1558.003 | Kerberoasting | UC-002, UC-005 |
+| T1021 | Remote Services | UC-003 |
+| T1021.001 | Remote Desktop Protocol | UC-003 |
+| T1021.004 | SSH | UC-001 |
+| T1059.001 | PowerShell | UC-007 |
+| T1003 | OS Credential Dumping | UC-007 |
+| T1218 | Signed Binary Proxy Execution | UC-007 |
+| T1105 | Ingress Tool Transfer | UC-007 |
+| T1047 | WMI | UC-007 |
+| T1595 | Active Scanning | UC-003 |
+| T1595.001 | Port Scanning | UC-003 |

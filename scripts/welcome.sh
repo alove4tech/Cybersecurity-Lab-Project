@@ -56,7 +56,7 @@ fi
 
 # TOOL CHECK
 echo -e "\n${YELLOW}[ Installed Tools ]${NC}"
-for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto crackmapexec; do
+for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec; do
     if command -v "$tool" >/dev/null 2>&1; then
         echo -e "  $tool:  ${GREEN}available${NC}"
     fi
@@ -66,5 +66,5 @@ echo -e "\n${YELLOW}[ Quick Commands ]${NC}"
 echo -e "  msfconsole              ${GREEN}# Metasploit Framework${NC}"
 echo -e "  responder -I eth0       ${GREEN}# LLMNR/NBT-NS poisoner${NC}"
 echo -e "  nmap -sV 10.10.69.0/24  ${GREEN}# Service scan on lab subnet${NC}"
-echo -e "  crackmapexec smb 10.10.69.0/24 ${GREEN}# SMB enumeration${NC}"
+echo -e "  netexec smb 10.10.69.0/24 ${GREEN}# SMB enumeration${NC}"
 echo -e "${BLUE}====================================================${NC}"
