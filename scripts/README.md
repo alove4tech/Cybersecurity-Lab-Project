@@ -18,7 +18,7 @@ chmod +x welcome.sh
 - **Lab gateway (pfSense)** — is the network up?
 - **Target host reachability** — pings DC01 and Wazuh to confirm they're alive
 - **Service status** — PostgreSQL (Metasploit DB) and Responder
-- **Installed tools** — scans for common offensive tools on PATH (msfconsole, nmap, responder, bloodhound, sqlmap, gobuster, nikto, crackmapexec)
+- **Installed tools** — scans for common offensive tools on PATH (msfconsole, nmap, responder, bloodhound, sqlmap, gobuster, nikto, netexec)
 - **Quick commands** — handy one-liners for common lab tasks
 
 ### Technical Logic Breakdown
