@@ -304,13 +304,14 @@ Trigger alert when:
 
 ---
 
-### UC-004: Blocked External Access Attempt
+### Blocked External Access Detection (Planned)
 
 **Detection Metadata:**
-- Detection ID: UC-004
 - Log Source: pfSense firewall logs
 - Severity: Medium (High if repeated)
 - MITRE ATT&CK: T1071 – Application Layer Protocol
+
+> **Note:** This is a planned firewall-based detection. Rule IDs use the 101xxx range to avoid conflicts with host-based detection rules (100xxx series).
 
 **Objective:** Detect attempts to access external networks from isolated lab (security control validation).
 
@@ -327,14 +328,14 @@ Trigger alert when:
 
 ```xml
 <group name="firewall,pfsense,blocked_traffic,">
-  <rule id="100300" level="7">
+  <rule id="101000" level="7">
     <if_sid>100200</rule>
     <field name="action">block</field>
     <description>Firewall blocked connection</description>
   </rule>
 
-  <rule id="100301" level="9">
-    <if_sid>100300</rule>
+  <rule id="101001" level="9">
+    <if_sid>101000</rule>
     <same_source_ip />
     <different_dst_ip />
     <description>Blocked external access: Multiple destinations from single source</description>
@@ -362,13 +363,14 @@ Trigger alert when:
 
 ---
 
-### UC-008: Port Sweep / Network Recon
+### Port Sweep / Network Recon (Planned)
 
 **Detection Metadata:**
-- Detection ID: UC-008
 - Log Source: pfSense firewall logs
 - Severity: High
 - MITRE ATT&CK: T1595 – Active Scanning
+
+> **Note:** This is a planned firewall-based detection. Rule IDs use the 101xxx range to avoid conflicts with host-based detection rules.
 
 **Objective:** Detect port sweeping behavior indicating reconnaissance.
 
@@ -385,7 +387,7 @@ Trigger alert when:
 
 ```xml
 <group name="firewall,pfsense,reconnaissance,">
-  <rule id="100400" level="12">
+  <rule id="101100" level="12">
     <if_sid>100200</rule>
     <same_source_ip />
     <same_dst_port />
@@ -410,7 +412,7 @@ Trigger alert when:
 
 2. Check firewall logs for multiple connections to port 22
 
-3. Verify Wazuh rule 100400 triggers
+3. Verify Wazuh rule 101100 triggers
 
 ---
 
@@ -424,7 +426,7 @@ Trigger alert when:
 
 ```xml
 <group name="correlation,credential_abuse,">
-  <rule id="100500" level="10">
+  <rule id="101200" level="10">
     <if_sid>100100,100201</if_sid> <!-- UC-001 brute force OR UC-003 lateral movement -->
     <same_source_ip />
     <description>Correlation: Network activity following authentication failures</description>
@@ -449,7 +451,7 @@ Attacker obtains service account credentials via Kerberoasting, then uses them t
 
 ```xml
 <group name="correlation,kerberos_lateral,">
-  <rule id="100600" level="13">
+  <rule id="101300" level="13">
     <if_sid>100100</if_sid> <!-- Kerberos RC4 (UC-002) -->
     <check_diff />
     <description>Correlation: Kerberos anomaly followed by lateral movement</description>
@@ -474,7 +476,7 @@ Administrator credential compromise → attacker accesses new systems.
 
 ```xml
 <group name="correlation,privileged_lateral,">
-  <rule id="100700" level="13">
+  <rule id="101400" level="13">
     <if_sid>61602,100200</if_sid> <!-- 4672 OR firewall connection -->
     <same_source_ip />
     <description>Correlation: Privileged logon followed by network activity</description>
@@ -514,11 +516,11 @@ Create a new dashboard in Wazuh with these panels:
 - Time range: Last 7d
 
 **Panel 5: Lateral Movement Alerts (Data Table)**
-- Query: `rule.id: 100201 OR rule.id: 100400`
+- Query: `rule.id: 100201 OR rule.id: 101100`
 - Columns: timestamp, source_ip, dst_ip, dst_port, action
 
 **Panel 6: Correlated Alerts Table**
-- Query: `rule.id: 100500 OR rule.id: 100600 OR rule.id: 100700`
+- Query: `rule.id: 101200 OR rule.id: 101300 OR rule.id: 101400`
 - Columns: timestamp, rule.description, source_ip, severity
 
 ---
@@ -531,8 +533,8 @@ Create a new dashboard in Wazuh with these panels:
 - [ ] Wazuh agent configured to monitor pfSense logs
 - [ ] Logs visible in Wazuh Dashboard → Events viewer
 - [ ] UC-003 lateral movement detection validated
-- [ ] UC-008 blocked external access validated
-- [ ] UC-009 port sweep detection validated
+- [ ] Blocked external access detection validated
+- [ ] Port sweep detection validated
 - [ ] Correlation rules tested
 - [ ] Dashboard panels configured
 

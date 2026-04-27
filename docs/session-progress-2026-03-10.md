@@ -1,5 +1,7 @@
 # Session Progress - March 10, 2026
 
+> **Rule ID update (April 2026):** The firewall correlation rules in `defensive/pfsense/syslog-forwarding.md` were renumbered to the 101xxx range to avoid conflicts with host-based detection rules. The original rule IDs referenced below (100300–100700 for firewall rules) are now 101000–101400. Host-based detection rules (100100, 100200–100401, 100600–100804) remain unchanged.
+
 ## Overview
 
 Completed significant work on mid-term roadmap items, focusing on pfSense syslog integration and network-based detection use cases for lateral movement detection.
