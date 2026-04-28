@@ -21,6 +21,7 @@
 
 - [ ] Evidence screenshots for validated detections
 - [ ] Dashboard implementation in Wazuh
+- [ ] Wazuh Active Response for auto-blocking scanners
 
 ## Planned
 

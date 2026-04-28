@@ -62,6 +62,7 @@ For each use case I:
 - [AD design](docs/02-active-directory-design.md)
 - [Network configuration](docs/03-network-configuration.md)
 - [Wazuh deployment](docs/04-wazuh-deployment.md)
+- [Evidence collection guide](docs/05-evidence-guide.md)
 - [pfSense syslog forwarding notes](defensive/pfsense/syslog-forwarding.md)
 - [Detection use cases](detections/)
 - [IR playbooks](incident-response/)

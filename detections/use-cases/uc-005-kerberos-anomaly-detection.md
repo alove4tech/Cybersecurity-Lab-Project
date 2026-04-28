@@ -369,7 +369,7 @@ date
 
 **Symptoms:**
 - Rule syntax errors in Wazuh
-- `openclaw agent: ERROR: Error decoding XML` in logs
+- Wazuh manager logs XML parsing errors
 - Wazuh manager fails to restart
 
 **Root Cause:**
