@@ -50,3 +50,4 @@ These events form the baseline for future detection engineering and attack simul
 - [pfSense syslog forwarding notes](../defensive/pfsense/syslog-forwarding.md)
 - [Detection use cases](../detections/README.md)
 - [Incident response playbooks and case studies](../incident-response/README.md)
+- [Evidence collection guide](05-evidence-guide.md)
