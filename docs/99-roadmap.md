@@ -17,6 +17,18 @@
 - [x] Correlation rules for auth + network events
 - [x] Dashboard visualization plan
 
+## Detection maturity
+
+| ID | Use Case | Status | Rule IDs | Playbook | Case Study |
+|----|----------|--------|----------|----------|------------|
+| UC-001 | SSH Brute Force | 🟢 Validated | Custom | PB-001 | CS-001 |
+| UC-002 | Kerberos RC4 (Kerberoasting signal) | 🟢 Validated | 100100 | PB-002 | CS-002 |
+| UC-003 | Lateral Movement (Network Scan) | 🟢 Validated | 100200–100401 | PB-003 | CS-003 |
+| UC-004 | Password Spraying (AD) | 🟢 Validated | 100600, 100601 | PB-001 | — |
+| UC-005 | Kerberos Anomaly Correlation | 🟢 Validated | 100300–100303 | PB-002 | — |
+| UC-006 | Privileged Logon Correlation | 🟢 Validated | 100500 | — | — |
+| UC-007 | Suspicious Process Execution (Sysmon) | 🟢 Validated | 100800–100804 | PB-004 | CS-004 |
+
 ## In progress
 
 - [ ] Evidence screenshots for validated detections
@@ -27,6 +39,7 @@
 
 - [ ] Blocked external access detection
 - [ ] Port sweep and recon detection coverage
+- [ ] Kerberos TGT volume anomaly (4768)
 - [ ] Automated lab build scripts (Terraform/Ansible)
 - [ ] Full purple-team scenario write-ups linking attack → alert → response
 - [ ] Wazuh Active Response for auto-blocking scanners

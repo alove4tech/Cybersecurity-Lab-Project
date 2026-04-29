@@ -41,9 +41,11 @@ These events form the baseline for future detection engineering and attack simul
 - Targets: Metasploitable2/3 (Ubuntu + Win2k8), Debian attack/management VM
 
 ## Next Up
-- pfSense log ingestion into SIEM (syslog → pipeline → dashboards)
-- Detection engineering: additional Kerberos + AD use-cases
-- Incident response playbooks mapped to detections
+- Evidence screenshots for validated detections
+- Dashboard implementation in Wazuh
+- Wazuh Active Response for auto-blocking
+- Purple-team scenario write-ups (attack → alert → response)
+- Terraform/Ansible provisioning for repeatable lab builds
 
 ## Quick links
 
