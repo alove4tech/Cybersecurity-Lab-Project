@@ -47,9 +47,21 @@ These events form the baseline for future detection engineering and attack simul
 - Purple-team scenario write-ups (attack → alert → response)
 - Terraform/Ansible provisioning for repeatable lab builds
 
+## Documentation Index
+
+| Document | Description |
+|----------|-------------|
+| [Lab Overview](00-lab-overview.md) | Project goals and scope |
+| [Architecture Diagram](01-architecture-diagram.md) | Network topology and segmentation |
+| [Active Directory Design](02-active-directory-design.md) | Domain structure, OUs, and GPOs |
+| [Network Configuration](03-network-configuration.md) | Subnet layout, firewall rules, DHCP |
+| [Wazuh Deployment](04-wazuh-deployment.md) | SIEM setup, agent onboarding, rules |
+| [Evidence Collection Guide](05-evidence-guide.md) | Screenshot standards and chain of custody |
+| [VM Inventory](../assets/vm-inventory.md) | All lab VMs with roles, IPs, and notes |
+| [Roadmap](99-roadmap.md) | Planned work and completion status |
+
 ## Quick links
 
 - [pfSense syslog forwarding notes](../defensive/pfsense/syslog-forwarding.md)
 - [Detection use cases](../detections/README.md)
 - [Incident response playbooks and case studies](../incident-response/README.md)
-- [Evidence collection guide](05-evidence-guide.md)
