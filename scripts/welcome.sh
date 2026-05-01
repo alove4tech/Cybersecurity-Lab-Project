@@ -62,9 +62,11 @@ for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec; 
     fi
 done
 
+# Quick commands
+IFACE=$(ip route | awk '/default/ {print $5; exit}')
 echo -e "\n${YELLOW}[ Quick Commands ]${NC}"
 echo -e "  msfconsole              ${GREEN}# Metasploit Framework${NC}"
-echo -e "  responder -I eth0       ${GREEN}# LLMNR/NBT-NS poisoner${NC}"
+echo -e "  responder -I $IFACE     ${GREEN}# LLMNR/NBT-NS poisoner${NC}"
 echo -e "  nmap -sV 10.10.69.0/24  ${GREEN}# Service scan on lab subnet${NC}"
 echo -e "  netexec smb 10.10.69.0/24 ${GREEN}# SMB enumeration${NC}"
 echo -e "${BLUE}====================================================${NC}"

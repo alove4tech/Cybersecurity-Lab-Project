@@ -364,10 +364,11 @@ If malicious activity confirmed:
 ✔ Detection logic defined
 ✔ Wazuh rules documented
 ✔ Validation procedures defined
+✔ Incident response playbook (PB-003)
+✔ Case study documented (CS-003)
 ⏳ Threshold tuning in progress
 ⏳ Evidence screenshots (add to assets/evidence/)
 ⏳ False positive tuning based on lab traffic
-⏳ Incident response playbook (PB-003 - to be created)
 
 ---
 
