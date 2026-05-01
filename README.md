@@ -2,6 +2,8 @@
 
 SOC + detection lab running on Proxmox. Isolated VLAN (10.10.69.0/24) with Active Directory, Wazuh SIEM, and attack hosts for detection engineering and IR practice.
 
+[![Detection status](https://img.shields.io/badge/detections-7%20validated-brightgreen)](./detections/) [![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-13%20techniques-blue)](#mitre-attck-coverage) [![Playbooks](https://img.shields.io/badge/playbooks-4-orange)](./incident-response/)
+
 ## Table of contents
 
 - [Network](#network)
