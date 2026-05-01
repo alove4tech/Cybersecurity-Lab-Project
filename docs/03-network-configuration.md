@@ -8,6 +8,7 @@ Lab network runs on an isolated VLAN — 10.10.69.0/24 — behind a pfSense VM a
 |---|---|---|---|
 | Firewall / Gateway | pfSense | 10.10.69.1 | Static |
 | Domain Controller | DC01 | 10.10.69.10 | Static |
+| SIEM / Log Collection | Wazuh | 10.10.69.20 | Static |
 | Windows Workstation | WIN10-CLIENT | DHCP | Dynamic |
 | Windows Workstation | WIN11-CLIENT | DHCP | Dynamic |
 | Attack / Management | Debian-Attack | DHCP | Dynamic |
