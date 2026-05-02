@@ -42,3 +42,4 @@
 - [ ] Kerberos TGT volume anomaly (4768)
 - [ ] Automated lab build scripts (Terraform/Ansible)
 - [ ] Full purple-team scenario write-ups linking attack → alert → response
+- [ ] Additional LOLBin coverage (bitsadmin, mshta, rundll32)

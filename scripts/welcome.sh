@@ -8,6 +8,7 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 CYAN='\033[0;36m'
+DIM='\033[2m'
 NC='\033[0m'
 
 clear
@@ -16,7 +17,8 @@ echo -e "${GREEN}      DEBIAN RED TEAM LAB - COMMAND CENTER          ${NC}"
 echo -e "${BLUE}====================================================${NC}"
 
 # SYSTEM INFO
-MY_IP=$(hostname -I | awk '{print $1}')
+MY_IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+MY_IP="${MY_IP:-<no ip>}"
 KERNEL=$(uname -r)
 echo -e "Attacker IP:    ${GREEN}$MY_IP${NC}"
 echo -e "Kernel:         ${CYAN}$KERNEL${NC}"
@@ -54,19 +56,22 @@ else
     echo -e "Responder:      ${RED}STOPPED${NC}"
 fi
 
-# TOOL CHECK
-echo -e "\n${YELLOW}[ Installed Tools ]${NC}"
-for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec; do
+# TOOL CHECK — show all tools with status
+echo -e "\n${YELLOW}[ Tool Inventory ]${NC}"
+for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec impacket-wmiexec; do
     if command -v "$tool" >/dev/null 2>&1; then
         echo -e "  $tool:  ${GREEN}available${NC}"
+    else
+        echo -e "  $tool:  ${DIM}not found${NC}"
     fi
 done
 
-# Quick commands
-IFACE=$(ip route | awk '/default/ {print $5; exit}')
+# Quick commands — fall back gracefully if no default route
+IFACE=$(ip route 2>/dev/null | awk '/default/ {print $5; exit}')
+IFACE="${IFACE:-<interface>}"
 echo -e "\n${YELLOW}[ Quick Commands ]${NC}"
-echo -e "  msfconsole              ${GREEN}# Metasploit Framework${NC}"
-echo -e "  responder -I $IFACE     ${GREEN}# LLMNR/NBT-NS poisoner${NC}"
-echo -e "  nmap -sV 10.10.69.0/24  ${GREEN}# Service scan on lab subnet${NC}"
+echo -e "  msfconsole                ${GREEN}# Metasploit Framework${NC}"
+echo -e "  responder -I $IFACE       ${GREEN}# LLMNR/NBT-NS poisoner${NC}"
+echo -e "  nmap -sV 10.10.69.0/24    ${GREEN}# Service scan on lab subnet${NC}"
 echo -e "  netexec smb 10.10.69.0/24 ${GREEN}# SMB enumeration${NC}"
 echo -e "${BLUE}====================================================${NC}"
