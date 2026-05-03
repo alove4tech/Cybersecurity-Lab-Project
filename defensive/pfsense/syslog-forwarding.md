@@ -26,7 +26,7 @@ Forward pfSense firewall logs to Wazuh SIEM for centralized monitoring, enabling
                     ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                      Wazuh Server                            │
-│  10.10.69.X                                                  │
+│  10.10.69.20                                                 │
 │  ┌───────────────────────────────────────────────────────┐  │
 │  │  Syslog Receiver (rsyslog/syslog-ng)                  │  │
 │  │  → Decodes pf syslog format                           │  │
@@ -48,7 +48,7 @@ Navigate to: **Status → System Logs → Settings**
 | Setting | Value | Notes |
 |---------|-------|-------|
 | Enable Remote Logging | ☑️ Checked | Enable syslog forwarding |
-| Remote Log Server | 10.10.69.X | Wazuh server IP |
+| Remote Log Server | 10.10.69.20 | Wazuh server IP |
 | Remote Log Server Port | 514 | Default syslog UDP port |
 | Protocol | UDP | UDP (default) or TCP for reliability |
 | Log Levels | Everything | Capture all log levels |
@@ -96,7 +96,7 @@ tcpdump -i any udp port 514 -n -v
 
 # You should see packets from 10.10.69.1 (pfSense)
 # Example output:
-# IP 10.10.69.1.43821 > 10.10.69.X.514: SYSLOG local0.info, ...
+# IP 10.10.69.1.43821 > 10.10.69.20.514: SYSLOG local0.info, ...
 ```
 
 ---
@@ -115,7 +115,7 @@ Edit `/etc/rsyslog.conf` on Wazuh Manager:
 # Add these lines to accept remote syslog
 $ModLoad imudp
 $UDPServerRun 514
-$UDPServerAddress 10.10.69.X  # Wazuh server IP
+$UDPServerAddress 10.10.69.20  # Wazuh server IP
 
 # Create pfSense-specific log file
 $template PFSenseFormat,"%timestamp% %hostname% %syslogtag% %msg%\n"

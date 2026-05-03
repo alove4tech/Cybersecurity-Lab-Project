@@ -64,7 +64,10 @@ Reduces noise from mistyped passwords while maintaining sensitivity.
 
 ## Validation Procedure
 
-1. Execute controlled brute force:hydra -l testuser -P wordlist.txt ssh://10.10.69.X
+1. Execute controlled brute force:
+   ```bash
+   hydra -l testuser -P wordlist.txt ssh://10.10.69.X
+   ```
 2. Confirm failed entries in auth.log
 3. Verify SIEM ingestion
 4. Confirm alert triggers
