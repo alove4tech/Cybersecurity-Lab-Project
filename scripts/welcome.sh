@@ -42,6 +42,18 @@ for host in "DC01:10.10.69.10" "Wazuh:10.10.69.20"; do
     fi
 done
 
+# VULNERABLE TARGETS
+echo -e "\n${YELLOW}[ Vulnerable Targets ]${NC}"
+for host in "Meta2:10.10.69.100" "Meta3-Ubuntu:10.10.69.101" "Meta3-Win2k8:10.10.69.102"; do
+    label="${host%%:*}"
+    addr="${host##*:}"
+    if ping -c 1 -W 1 "$addr" >/dev/null 2>&1; then
+        echo -e "  $label ($addr):  ${GREEN}REACHABLE${NC}"
+    else
+        echo -e "  $label ($addr):  ${DIM}OFFLINE${NC}"
+    fi
+done
+
 # SERVICE MONITORING
 echo -e "\n${YELLOW}[ Service Status ]${NC}"
 if systemctl is-active --quiet postgresql; then
