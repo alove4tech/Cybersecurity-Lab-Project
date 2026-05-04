@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Advanced Red Team Command Center Script
+# Red Team Lab Command Center — quick status dashboard for the attack host
 set -euo pipefail
 
 # Colors for UI
@@ -11,21 +11,30 @@ CYAN='\033[0;36m'
 DIM='\033[2m'
 NC='\033[0m'
 
+# Lab network constants
+GATEWAY="10.10.69.1"
+LAB_SUBNET="10.10.69.0/24"
+
 clear
 echo -e "${BLUE}====================================================${NC}"
 echo -e "${GREEN}      DEBIAN RED TEAM LAB - COMMAND CENTER          ${NC}"
 echo -e "${BLUE}====================================================${NC}"
 
 # SYSTEM INFO
-MY_IP=$(hostname -I 2>/dev/null | awk '{print $1}')
-MY_IP="${MY_IP:-<no ip>}"
+if MY_IP=$(hostname -I 2>/dev/null | awk '{print $1}') && [[ -n "$MY_IP" ]]; then
+    echo -e "Attacker IP:    ${GREEN}$MY_IP${NC}"
+else
+    echo -e "Attacker IP:    ${RED}<no ip>${NC}"
+fi
 KERNEL=$(uname -r)
-echo -e "Attacker IP:    ${GREEN}$MY_IP${NC}"
 echo -e "Kernel:         ${CYAN}$KERNEL${NC}"
 
+# Timestamp so it's clear when the dashboard was generated
+echo -e "Checked at:     ${DIM}$(date '+%Y-%m-%d %H:%M:%S')${NC}"
+
 # GATEWAY CHECK
-if ping -c 1 -W 2 10.10.69.1 >/dev/null 2>&1; then
-    echo -e "Lab Gateway:    ${GREEN}ONLINE (10.10.69.1)${NC}"
+if ping -c 1 -W 2 "$GATEWAY" >/dev/null 2>&1; then
+    echo -e "Lab Gateway:    ${GREEN}ONLINE ($GATEWAY)${NC}"
 else
     echo -e "Lab Gateway:    ${RED}OFFLINE (Check pfSense VM)${NC}"
 fi
@@ -56,7 +65,7 @@ done
 
 # SERVICE MONITORING
 echo -e "\n${YELLOW}[ Service Status ]${NC}"
-if systemctl is-active --quiet postgresql; then
+if systemctl is-active --quiet postgresql 2>/dev/null; then
     echo -e "Metasploit DB:  ${GREEN}ACTIVE${NC}"
 else
     echo -e "Metasploit DB:  ${RED}INACTIVE${NC}"
@@ -78,12 +87,15 @@ for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec i
     fi
 done
 
-# Quick commands — fall back gracefully if no default route
-IFACE=$(ip route 2>/dev/null | awk '/default/ {print $5; exit}')
-IFACE="${IFACE:-<interface>}"
+# Quick commands — detect the default interface, fall back gracefully
+if IFACE=$(ip route 2>/dev/null | awk '/default/ {print $5; exit}') && [[ -n "$IFACE" ]]; then
+    : # good, IFACE is set
+else
+    IFACE="<interface>"
+fi
 echo -e "\n${YELLOW}[ Quick Commands ]${NC}"
 echo -e "  msfconsole                ${GREEN}# Metasploit Framework${NC}"
 echo -e "  responder -I $IFACE       ${GREEN}# LLMNR/NBT-NS poisoner${NC}"
-echo -e "  nmap -sV 10.10.69.0/24    ${GREEN}# Service scan on lab subnet${NC}"
-echo -e "  netexec smb 10.10.69.0/24 ${GREEN}# SMB enumeration${NC}"
+echo -e "  nmap -sV $LAB_SUBNET      ${GREEN}# Service scan on lab subnet${NC}"
+echo -e "  netexec smb $LAB_SUBNET   ${GREEN}# SMB enumeration${NC}"
 echo -e "${BLUE}====================================================${NC}"
