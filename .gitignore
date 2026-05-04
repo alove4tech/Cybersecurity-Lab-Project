@@ -6,6 +6,8 @@ Thumbs.db
 .vscode/
 .idea/
 *~
+*.swp
+*.swo
 
 # Python
 __pycache__/
@@ -19,10 +21,9 @@ scripts/*.log
 
 # Secrets
 .env
+.env.*
 *.key
 *.pem
-
-# EditorConfig (keep .editorconfig in the repo if added)
 
 # Common archives people accidentally commit
 *.zip
