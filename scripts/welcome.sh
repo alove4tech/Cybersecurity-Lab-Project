@@ -71,10 +71,16 @@ else
     echo -e "Metasploit DB:  ${RED}INACTIVE${NC}"
 fi
 
-if pgrep -f "Responder.py" > /dev/null 2>&1; then
+if pgrep -fi "responder" > /dev/null 2>&1; then
     echo -e "Responder:      ${GREEN}RUNNING${NC}"
 else
     echo -e "Responder:      ${RED}STOPPED${NC}"
+fi
+
+if systemctl is-active --quiet wazuh-agent 2>/dev/null; then
+    echo -e "Wazuh Agent:    ${GREEN}ACTIVE${NC}"
+else
+    echo -e "Wazuh Agent:    ${RED}INACTIVE${NC}"
 fi
 
 # TOOL CHECK — show all tools with status
