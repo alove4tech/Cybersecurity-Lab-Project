@@ -130,12 +130,12 @@ pfSense does not run a native Wazuh agent. Instead, logs are forwarded via syslo
 
 | Hostname | IP Address | OS | Agent Type | Log Sources | Status |
 |----------|------------|-------|-------------|--------------|--------|
-| wazuh-server | 10.10.69.20 | Linux | Manager/Server | All telemetry | ⏳ Planned |
-| dc01 | 10.10.69.10 | Windows Server 2022 | Wazuh Agent | Windows Security (4624, 4625, 4672, 4768, 4769) | ⏳ Planned |
-| win10-client | DHCP reservation recommended | Windows 10 | Wazuh Agent | Windows Security | ⏳ Planned |
-| win11-client | DHCP reservation recommended | Windows 11 | Wazuh Agent | Windows Security | ⏳ Planned |
-| Debian-Attack | DHCP reservation recommended | Debian/Ubuntu | Wazuh Agent | /var/log/auth.log, syslog | ⏳ Planned |
-| pfSense | 10.10.69.1 | pfSense | Syslog Forwarder | Firewall, DHCP, System | ⏳ Planned |
+| wazuh-server | 10.10.69.20 | Linux | Manager/Server | All telemetry | ✅ Deployed |
+| dc01 | 10.10.69.10 | Windows Server 2022 | Wazuh Agent | Windows Security (4624, 4625, 4672, 4768, 4769), Sysmon | ✅ Enrolled |
+| win10-client | DHCP | Windows 10 | Wazuh Agent | Windows Security, Sysmon | ✅ Enrolled |
+| win11-client | DHCP | Windows 11 | Wazuh Agent | Windows Security, Sysmon | ✅ Enrolled |
+| Debian-Attack | DHCP (typically 10.10.69.50) | Debian | Wazuh Agent | /var/log/auth.log, syslog | ✅ Enrolled |
+| pfSense | 10.10.69.1 | pfSense | Syslog Forwarder | Firewall, DHCP, System | ✅ Configured |
 
 ---
 
@@ -233,17 +233,19 @@ Log categories to forward:
 
 ## Validation Checklist
 
-- [ ] Wazuh server installed and accessible
-- [ ] Dashboard login working
-- [ ] DC01 agent enrolled and reporting
-- [ ] Windows client agents enrolled
-- [ ] Linux attack VM agent enrolled
-- [ ] pfSense syslog forwarding configured
-- [ ] Windows Security events ingesting (4624, 4625, 4672, 4768, 4769)
-- [ ] Linux auth.log ingesting
-- [ ] Custom rule 100100 deployed
-- [ ] Alert generation validated for UC-001 and UC-002
-- [ ] Dashboards configured
+- [x] Wazuh server installed and accessible
+- [x] Dashboard login working
+- [x] DC01 agent enrolled and reporting
+- [x] Windows client agents enrolled
+- [x] Linux attack VM agent enrolled
+- [x] pfSense syslog forwarding configured
+- [x] Windows Security events ingesting (4624, 4625, 4672, 4768, 4769)
+- [x] Linux auth.log ingesting
+- [x] Sysmon events ingesting (Event ID 1 on Windows endpoints)
+- [x] Custom rule 100100 deployed
+- [x] Alert generation validated for UC-001 through UC-007
+- [ ] Dashboards configured (in progress)
+- [ ] Wazuh Active Response configured (planned)
 
 ---
 
@@ -279,12 +281,16 @@ telnet 10.10.69.20 1514
 
 ## Next Steps
 
-- [ ] Stand up `wazuh-server` at `10.10.69.20` and document final package versions
-- [ ] Enroll DC01 first, then the two Windows clients, then Debian-Attack
-- [ ] Complete pfSense syslog forwarding integration
-- [ ] Implement 4625 burst + password spray correlation
-- [ ] Build correlation rules for lateral movement detection
+- [x] Stand up `wazuh-server` at `10.10.69.20` and document final package versions
+- [x] Enroll DC01 first, then the two Windows clients, then Debian-Attack
+- [x] Complete pfSense syslog forwarding integration
+- [x] Implement 4625 burst + password spray correlation (UC-004, rules 100600–100601)
+- [x] Build correlation rules for lateral movement detection (rules 100200–100401)
+- [x] Kerberos anomaly detection (UC-005, rules 100300–100303)
+- [x] Privileged logon correlation (UC-006, rule 100500)
+- [x] Suspicious process execution via Sysmon (UC-007, rules 100800–100804)
 - [ ] Create automated response playbooks (Active Response)
+- [ ] Build out Wazuh dashboards
 - [ ] Integrate threat intelligence feeds (future)
 
 ---

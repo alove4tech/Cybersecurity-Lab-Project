@@ -14,6 +14,7 @@ NC='\033[0m'
 # Lab network constants
 GATEWAY="10.10.69.1"
 LAB_SUBNET="10.10.69.0/24"
+WAZUH_MANAGER="10.10.69.20"
 
 clear
 echo -e "${BLUE}====================================================${NC}"
@@ -37,6 +38,15 @@ if ping -c 1 -W 2 "$GATEWAY" >/dev/null 2>&1; then
     echo -e "Lab Gateway:    ${GREEN}ONLINE ($GATEWAY)${NC}"
 else
     echo -e "Lab Gateway:    ${RED}OFFLINE (Check pfSense VM)${NC}"
+fi
+
+# WAZUH MANAGER CHECK
+if nc -z -w 2 "$WAZUH_MANAGER" 1514 2>/dev/null; then
+    echo -e "Wazuh Manager:  ${GREEN}REACHABLE ($WAZUH_MANAGER:1514)${NC}"
+elif ping -c 1 -W 1 "$WAZUH_MANAGER" >/dev/null 2>&1; then
+    echo -e "Wazuh Manager:  ${YELLOW}PING OK but port 1514 not responding ($WAZUH_MANAGER)${NC}"
+else
+    echo -e "Wazuh Manager:  ${RED}UNREACHABLE ($WAZUH_MANAGER)${NC}"
 fi
 
 # TARGET REACHABILITY
@@ -85,7 +95,7 @@ fi
 
 # TOOL CHECK — show all tools with status
 echo -e "\n${YELLOW}[ Tool Inventory ]${NC}"
-for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec impacket-wmiexec; do
+for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec impacket-wmiexec certipy-ad bloodhound-python; do
     if command -v "$tool" >/dev/null 2>&1; then
         echo -e "  $tool:  ${GREEN}available${NC}"
     else
