@@ -12,6 +12,14 @@ chmod +x welcome.sh
 # or add to ~/.bashrc for auto-run on login
 ```
 
+### CLI options
+
+| Flag | Description |
+|------|-------------|
+| `-h`, `--help` | Show usage info |
+| `-v`, `--version` | Print version |
+| `-n`, `--no-clear` | Skip screen clear (useful when called from scripts) |
+
 ### What it checks
 
 - **Attacker IP and kernel** — quick system identification

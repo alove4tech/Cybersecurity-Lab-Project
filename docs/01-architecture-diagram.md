@@ -41,6 +41,67 @@ All lab systems are segmented from the home network using pfSense.
 
 ---
 
+## Network Topology (Mermaid)
+
+```mermaid
+graph TB
+    subgraph Home["Home Network"]
+        home_router["Home Router"]
+    end
+
+    subgraph Lab["Cyberlab Network<br/>10.10.69.0/24"]
+        pfsense["pfSense<br/>10.10.69.1<br/>Firewall / DHCP / Syslog"]
+        dc01["DC01<br/>10.10.69.10<br/>Windows Server 2022<br/>corp.local"]
+        wazuh["Wazuh SIEM<br/>10.10.69.20<br/>Manager + Indexer + Dashboard"]
+        win10["WIN10-CLIENT<br/>DHCP<br/>Domain Workstation"]
+        win11["WIN11-CLIENT<br/>DHCP<br/>Domain Workstation"]
+        attack["Debian-Attack<br/>DHCP (~10.10.69.50)<br/>Adversary Simulation"]
+        meta2["Metasploitable2<br/>DHCP<br/>Vulnerable Linux"]
+        meta3u["Meta3-Ubuntu<br/>DHCP<br/>Vulnerable Ubuntu"]
+        meta3w["Meta3-Win2k8<br/>DHCP<br/>Vulnerable Windows"]
+    end
+
+    home_router -.->|"Blocked"| pfsense
+
+    pfsense --> dc01
+    pfsense --> wazuh
+    pfsense --> win10
+    pfsense --> win11
+    pfsense --> attack
+    pfsense --> meta2
+    pfsense --> meta3u
+    pfsense --> meta3w
+
+    attack -->|"Attack traffic"| dc01
+    attack -->|"Attack traffic"| meta2
+    attack -->|"Attack traffic"| meta3u
+    attack -->|"Attack traffic"| meta3w
+
+    dc01 -->|"Syslog + Agent"| wazuh
+    win10 -->|"Sysmon + Agent"| wazuh
+    win11 -->|"Sysmon + Agent"| wazuh
+    attack -->|"Agent"| wazuh
+    pfsense -->|"Syslog UDP 514"| wazuh
+
+    classDef firewall fill:#f9a825,stroke:#f57f17,color:#000
+    classDef server fill:#e53935,stroke:#b71c1c,color:#fff
+    classDef siem fill:#43a047,stroke:#2e7d32,color:#fff
+    classDef workstation fill:#1e88e5,stroke:#1565c0,color:#fff
+    classDef attack fill:#8e24aa,stroke:#6a1b9a,color:#fff
+    classDef target fill:#757575,stroke:#424242,color:#fff
+
+    class pfsense firewall
+    class dc01 server
+    class wazuh siem
+    class win10,win11 workstation
+    class attack attack
+    class meta2,meta3u,meta3w target
+```
+
+> **Note:** The Mermaid diagram renders visually on GitHub. Dashed lines represent blocked traffic; solid lines show allowed communication paths. Color coding: 🟡 Firewall, 🔴 Server, 🟢 SIEM, 🔵 Workstations, 🟣 Attack host, ⚫ Vulnerable targets.
+
+---
+
 ## Segmentation & Security Controls
 
 - Cyberlab network is **fully segmented** from the home network

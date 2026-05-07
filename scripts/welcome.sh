@@ -2,6 +2,40 @@
 # Red Team Lab Command Center — quick status dashboard for the attack host
 set -euo pipefail
 
+VERSION="1.2.0"
+
+# Lab network constants
+GATEWAY="10.10.69.1"
+LAB_SUBNET="10.10.69.0/24"
+WAZUH_MANAGER="10.10.69.20"
+
+usage() {
+    cat <<EOF
+Red Team Lab Command Center v${VERSION}
+
+Usage: $(basename "$0") [OPTIONS]
+
+Options:
+  -h, --help      Show this help message
+  -v, --version   Show version
+  -n, --no-clear  Skip clearing the screen (useful in scripts)
+
+Runs a quick status dashboard showing network connectivity,
+service status, and tool availability for the attack host.
+EOF
+    exit 0
+}
+
+NO_CLEAR=0
+for arg in "$@"; do
+    case "$arg" in
+        -h|--help)    usage ;;
+        -v|--version) echo "welcome.sh v${VERSION}"; exit 0 ;;
+        -n|--no-clear) NO_CLEAR=1 ;;
+        *) echo "Unknown option: $arg. Try --help."; exit 1 ;;
+    esac
+done
+
 # Colors for UI
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -11,12 +45,7 @@ CYAN='\033[0;36m'
 DIM='\033[2m'
 NC='\033[0m'
 
-# Lab network constants
-GATEWAY="10.10.69.1"
-LAB_SUBNET="10.10.69.0/24"
-WAZUH_MANAGER="10.10.69.20"
-
-clear
+[[ "$NO_CLEAR" -eq 0 ]] && clear
 echo -e "${BLUE}====================================================${NC}"
 echo -e "${GREEN}      DEBIAN RED TEAM LAB - COMMAND CENTER          ${NC}"
 echo -e "${BLUE}====================================================${NC}"
