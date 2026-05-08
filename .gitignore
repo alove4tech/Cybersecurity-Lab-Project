@@ -24,6 +24,15 @@ scripts/*.log
 .env.*
 *.key
 *.pem
+*.p12
+*.pfx
+
+# Security artifacts that shouldn't be committed
+*.kdbx
+*.hashcat
+*.john
+potfile
+hashcat.potfile
 
 # Common archives people accidentally commit
 *.zip

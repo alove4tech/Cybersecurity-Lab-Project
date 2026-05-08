@@ -70,12 +70,28 @@ else
 fi
 
 # WAZUH MANAGER CHECK
-if nc -z -w 2 "$WAZUH_MANAGER" 1514 2>/dev/null; then
-    echo -e "Wazuh Manager:  ${GREEN}REACHABLE ($WAZUH_MANAGER:1514)${NC}"
-elif ping -c 1 -W 1 "$WAZUH_MANAGER" >/dev/null 2>&1; then
-    echo -e "Wazuh Manager:  ${YELLOW}PING OK but port 1514 not responding ($WAZUH_MANAGER)${NC}"
+if command -v nc >/dev/null 2>&1; then
+    if nc -z -w 2 "$WAZUH_MANAGER" 1514 2>/dev/null; then
+        echo -e "Wazuh Manager:  ${GREEN}REACHABLE ($WAZUH_MANAGER:1514)${NC}"
+    elif ping -c 1 -W 1 "$WAZUH_MANAGER" >/dev/null 2>&1; then
+        echo -e "Wazuh Manager:  ${YELLOW}PING OK but port 1514 not responding ($WAZUH_MANAGER)${NC}"
+    else
+        echo -e "Wazuh Manager:  ${RED}UNREACHABLE ($WAZUH_MANAGER)${NC}"
+    fi
+elif command -v timeout >/dev/null 2>&1 && command -v bash >/dev/null 2>&1; then
+    if timeout 2 bash -c "echo >/dev/tcp/$WAZUH_MANAGER/1514" 2>/dev/null; then
+        echo -e "Wazuh Manager:  ${GREEN}REACHABLE ($WAZUH_MANAGER:1514)${NC}"
+    elif ping -c 1 -W 1 "$WAZUH_MANAGER" >/dev/null 2>&1; then
+        echo -e "Wazuh Manager:  ${YELLOW}PING OK but port 1514 not responding ($WAZUH_MANAGER)${NC}"
+    else
+        echo -e "Wazuh Manager:  ${RED}UNREACHABLE ($WAZUH_MANAGER)${NC}"
+    fi
 else
-    echo -e "Wazuh Manager:  ${RED}UNREACHABLE ($WAZUH_MANAGER)${NC}"
+    if ping -c 1 -W 1 "$WAZUH_MANAGER" >/dev/null 2>&1; then
+        echo -e "Wazuh Manager:  ${YELLOW}PING OK (port check skipped, nc not available) ($WAZUH_MANAGER)${NC}"
+    else
+        echo -e "Wazuh Manager:  ${RED}UNREACHABLE ($WAZUH_MANAGER)${NC}"
+    fi
 fi
 
 # TARGET REACHABILITY
@@ -110,7 +126,7 @@ else
     echo -e "Metasploit DB:  ${RED}INACTIVE${NC}"
 fi
 
-if pgrep -fi "responder" > /dev/null 2>&1; then
+if pgrep -f "[Rr]esponder" > /dev/null 2>&1; then
     echo -e "Responder:      ${GREEN}RUNNING${NC}"
 else
     echo -e "Responder:      ${RED}STOPPED${NC}"
