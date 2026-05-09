@@ -334,14 +334,15 @@ Created dashboard panel specifications for Wazuh:
 
 ## Repository Statistics
 
-- **Total Markdown Files:** 26
-- **Detections:** 3 (UC-001, UC-002, UC-003)
-- **Planned Detections:** 2 (UC-004, UC-005)
-- **Playbooks:** 3 (PB-001, PB-002, PB-003)
-- **Case Studies:** 3 (CS-001, CS-002, CS-003)
-- **Wazuh Rules:** 10 documented
-- **MITRE ATT&CK Techniques:** 9 covered
-- **Screenshots Needed:** 12
+> **Updated** to reflect the current state of the repository (7 use cases, 4 playbooks, 4 case studies, 14 MITRE ATT&CK techniques).
+
+- **Total Markdown Files:** 30+
+- **Detections:** 7 (UC-001 through UC-007)
+- **Playbooks:** 4 (PB-001 through PB-004)
+- **Case Studies:** 4 (CS-001 through CS-004)
+- **Wazuh Rules:** 20+ documented
+- **MITRE ATT&CK Techniques:** 14 covered
+- **Evidence Placeholders:** 18 (to be captured)
 
 ---
 
