@@ -45,6 +45,32 @@ CYAN='\033[0;36m'
 DIM='\033[2m'
 NC='\033[0m'
 
+# --- Helper: test if a TCP port is open on a remote host ---
+# Tries nc first, then bash /dev/tcp, then falls back to ping-only.
+# Usage: check_tcp_port <host> <port> <label>
+# Prints a status line and returns 0 if port is open.
+check_tcp_port() {
+    local host="$1" port="$2" label="$3"
+    local port_ok=false
+
+    if command -v nc >/dev/null 2>&1; then
+        nc -z -w 2 "$host" "$port" 2>/dev/null && port_ok=true
+    elif command -v timeout >/dev/null 2>&1; then
+        timeout 2 bash -c "echo >/dev/tcp/$host/$port" 2>/dev/null && port_ok=true
+    fi
+
+    if $port_ok; then
+        echo -e "$label:  ${GREEN}REACHABLE ($host:$port)${NC}"
+        return 0
+    elif ping -c 1 -W 1 "$host" >/dev/null 2>&1; then
+        echo -e "$label:  ${YELLOW}PING OK but port $port not responding ($host)${NC}"
+        return 1
+    else
+        echo -e "$label:  ${RED}UNREACHABLE ($host)${NC}"
+        return 1
+    fi
+}
+
 [[ "$NO_CLEAR" -eq 0 ]] && clear
 echo -e "${BLUE}====================================================${NC}"
 echo -e "${GREEN}      DEBIAN RED TEAM LAB - COMMAND CENTER          ${NC}"
@@ -69,30 +95,9 @@ else
     echo -e "Lab Gateway:    ${RED}OFFLINE (Check pfSense VM)${NC}"
 fi
 
-# WAZUH MANAGER CHECK
-if command -v nc >/dev/null 2>&1; then
-    if nc -z -w 2 "$WAZUH_MANAGER" 1514 2>/dev/null; then
-        echo -e "Wazuh Manager:  ${GREEN}REACHABLE ($WAZUH_MANAGER:1514)${NC}"
-    elif ping -c 1 -W 1 "$WAZUH_MANAGER" >/dev/null 2>&1; then
-        echo -e "Wazuh Manager:  ${YELLOW}PING OK but port 1514 not responding ($WAZUH_MANAGER)${NC}"
-    else
-        echo -e "Wazuh Manager:  ${RED}UNREACHABLE ($WAZUH_MANAGER)${NC}"
-    fi
-elif command -v timeout >/dev/null 2>&1 && command -v bash >/dev/null 2>&1; then
-    if timeout 2 bash -c "echo >/dev/tcp/$WAZUH_MANAGER/1514" 2>/dev/null; then
-        echo -e "Wazuh Manager:  ${GREEN}REACHABLE ($WAZUH_MANAGER:1514)${NC}"
-    elif ping -c 1 -W 1 "$WAZUH_MANAGER" >/dev/null 2>&1; then
-        echo -e "Wazuh Manager:  ${YELLOW}PING OK but port 1514 not responding ($WAZUH_MANAGER)${NC}"
-    else
-        echo -e "Wazuh Manager:  ${RED}UNREACHABLE ($WAZUH_MANAGER)${NC}"
-    fi
-else
-    if ping -c 1 -W 1 "$WAZUH_MANAGER" >/dev/null 2>&1; then
-        echo -e "Wazuh Manager:  ${YELLOW}PING OK (port check skipped, nc not available) ($WAZUH_MANAGER)${NC}"
-    else
-        echo -e "Wazuh Manager:  ${RED}UNREACHABLE ($WAZUH_MANAGER)${NC}"
-    fi
-fi
+# WAZUH CHECKS
+check_tcp_port "$WAZUH_MANAGER" 1514 "Wazuh Manager"
+check_tcp_port "$WAZUH_MANAGER" 55000 "Wazuh Dashboard"
 
 # TARGET REACHABILITY
 echo -e "\n${YELLOW}[ Target Hosts ]${NC}"
@@ -140,13 +145,18 @@ fi
 
 # TOOL CHECK — show all tools with status
 echo -e "\n${YELLOW}[ Tool Inventory ]${NC}"
+tool_total=0
+tool_found=0
 for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec impacket-wmiexec certipy-ad bloodhound-python; do
+    tool_total=$((tool_total + 1))
     if command -v "$tool" >/dev/null 2>&1; then
+        tool_found=$((tool_found + 1))
         echo -e "  $tool:  ${GREEN}available${NC}"
     else
         echo -e "  $tool:  ${DIM}not found${NC}"
     fi
 done
+echo -e "  ${DIM}($tool_found/$tool_total available)${NC}"
 
 # Quick commands — detect the default interface, fall back gracefully
 if IFACE=$(ip route 2>/dev/null | awk '/default/ {print $5; exit}') && [[ -n "$IFACE" ]]; then

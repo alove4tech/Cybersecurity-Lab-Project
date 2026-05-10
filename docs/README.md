@@ -21,15 +21,22 @@ The goal of this project is to bridge offensive techniques with defensive monito
 
 # Security Telemetry Validated
 
-The following event types are confirmed in the DC Security log:
+### Windows Event Log Sources
 
 - 4624 — Successful logon
 - 4625 — Failed logon
 - 4672 — Privileged logon
 - 4768 — Kerberos TGT request
 - 4769 — Kerberos service ticket request
+- Sysmon Event ID 1 — Process creation
 
-These events form the baseline for future detection engineering and attack simulation.
+### Network & Firewall Sources
+
+- pfSense filterlog — allow/block/NAT events
+- pfSense DHCP — lease assignments
+- pfSense syslog — system events
+
+All events are collected via Wazuh agents or syslog forwarding and validated against 7 detection use cases and 14 MITRE ATT&CK techniques.
 
 ---
 
@@ -41,11 +48,16 @@ These events form the baseline for future detection engineering and attack simul
 - Targets: Metasploitable2/3 (Ubuntu + Win2k8), Debian attack/management VM
 
 ## Next Up
-- Evidence screenshots for validated detections
-- Dashboard implementation in Wazuh
-- Wazuh Active Response for auto-blocking
-- Purple-team scenario write-ups (attack → alert → response)
-- Terraform/Ansible provisioning for repeatable lab builds
+
+See the full roadmap in [99-roadmap.md](99-roadmap.md) for planned and completed work.
+
+- [ ] Evidence screenshots for validated detections (in progress)
+- [ ] Dashboard implementation in Wazuh
+- [ ] Wazuh Active Response for auto-blocking scanners
+- [ ] Blocked external access detection
+- [ ] Port sweep and recon detection coverage
+- [ ] Automated lab build scripts (Terraform/Ansible)
+- [ ] Full purple-team scenario write-ups (attack → alert → response)
 
 ## Documentation Index
 
