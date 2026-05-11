@@ -1,0 +1,282 @@
+<!--
+  Consolidated Wazuh custom rules for the Cybersecurity Homelab
+  Deploy to: /var/ossec/etc/rules/local_rules.xml on the Wazuh Manager
+
+  Rule ID ranges:
+    100100        Kerberos RC4 ticket detection (UC-002)
+    100200–100401 Lateral movement / network scan detection (UC-003)
+    100300–100303 Kerberos anomaly / Kerberoasting correlation (UC-005)
+    100500        Privileged logon correlation (UC-006)
+    100600–100601 Password spraying detection (UC-004)
+    100800–100804 Suspicious process execution via Sysmon (UC-007)
+    101000–101400 Firewall correlation rules (planned)
+
+  Restart Wazuh Manager after changes:
+    systemctl restart wazuh-manager
+  Validate syntax first:
+    /var/ossec/bin/wazuh-logtest
+-->
+
+<!-- ============================================================ -->
+<!-- Kerberos RC4 Ticket Detection (UC-002)                       -->
+<!-- ============================================================ -->
+<group name="windows,kerberos,">
+  <rule id="100100" level="12">
+    <if_sid>61602</if_sid>
+    <field name="TicketEncryptionType">0x17</field>
+    <description>Kerberos service ticket issued with RC4 encryption - Potential Kerberoasting</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+    <group>kerberos,kerberoasting,privilege_escalation</group>
+  </rule>
+</group>
+
+<!-- ============================================================ -->
+<!-- Lateral Movement / Network Scan Detection (UC-003)           -->
+<!-- pfSense filterlog events                                     -->
+<!-- ============================================================ -->
+<group name="firewall,pfsense,">
+  <rule id="100200" level="0">
+    <match>filterlog</match>
+    <description>pfSense firewall event logged</description>
+  </rule>
+</group>
+
+<group name="firewall,pfsense,lateral_movement,">
+  <rule id="100201" level="8">
+    <if_sid>100200</if_sid>
+    <same_source_ip />
+    <different_dst_ip />
+    <options>alert_by_email</options>
+    <description>Lateral movement: Multiple destination IPs from single source (≥ 10 in 5m)</description>
+    <mitre>
+      <id>T1021</id>
+    </mitre>
+    <group>lateral_movement,scanning</group>
+  </rule>
+</group>
+
+<!--
+  Frequency config for rule 100201 — add to ossec.conf:
+  <rules>
+    <rule frequency="10" timeframe="300">
+      <rule_id>100201</rule_id>
+    </rule>
+  </rules>
+-->
+
+<group name="firewall,pfsense,reconnaissance,">
+  <rule id="100400" level="12">
+    <if_sid>100200</if_sid>
+    <same_source_ip />
+    <same_dst_port />
+    <different_dst_ip />
+    <description>Port sweep: Same port accessed on multiple hosts (≥ 15 in 2m)</description>
+    <mitre>
+      <id>T1595.001</id>
+    </mitre>
+    <group>reconnaissance,port_sweep</group>
+  </rule>
+</group>
+
+<!--
+  Frequency config for rule 100400 — add to ossec.conf:
+  <rules>
+    <rule frequency="15" timeframe="120">
+      <rule_id>100400</rule_id>
+    </rule>
+  </rules>
+-->
+
+<group name="firewall,pfsense,reconnaissance,">
+  <rule id="100401" level="10">
+    <if_sid>100200</if_sid>
+    <same_source_ip />
+    <same_dst_ip />
+    <different_dst_port />
+    <description>Port scanning: Multiple ports accessed on single host (≥ 20 in 3m)</description>
+    <mitre>
+      <id>T1595.002</id>
+    </mitre>
+    <group>reconnaissance,port_scan</group>
+  </rule>
+</group>
+
+<!--
+  Frequency config for rule 100401 — add to ossec.conf:
+  <rules>
+    <rule frequency="20" timeframe="180">
+      <rule_id>100401</rule_id>
+    </rule>
+  </rules>
+-->
+
+<!-- ============================================================ -->
+<!-- Kerberos Anomaly / Kerberoasting Correlation (UC-005)        -->
+<!-- Builds on top of rule 100100                                 -->
+<!-- ============================================================ -->
+<group name="windows,kerberos,kerberoast_lab,">
+  <!-- Base lab rule: groups all RC4 ticket events for correlation -->
+  <rule id="100300" level="3">
+    <if_sid>100100</if_sid>
+    <description>LAB: Kerberos RC4 ticket observed</description>
+    <group>windows,kerberos,kerberoast_lab,rc4_ticket</group>
+  </rule>
+
+  <!-- Single user requesting many SPNs (SPN enumeration) -->
+  <rule id="100301" level="10" frequency="4" timeframe="180">
+    <if_matched_sid>100300</if_matched_sid>
+    <same_field>win.eventdata.targetUserName</same_field>
+    <different_field>win.eventdata.serviceName</different_field>
+    <description>LAB: Possible Kerberoasting - single account requested tickets for many different SPNs</description>
+    <group>kerberoast_lab,kerberos,spn_enumeration,credential_access</group>
+  </rule>
+
+  <!-- Multiple users requesting same SPN (targeted Kerberoasting) -->
+  <rule id="100302" level="9" frequency="2" timeframe="600">
+    <if_matched_sid>100300</if_matched_sid>
+    <same_field>win.eventdata.serviceName</same_field>
+    <different_field>win.eventdata.targetUserName</different_field>
+    <description>LAB: Possible SPN targeting - multiple users requesting same service ticket</description>
+    <group>kerberoast_lab,kerberos,spn_targeting,credential_access</group>
+  </rule>
+
+  <!-- High volume Kerberos activity (noisy tools) -->
+  <rule id="100303" level="10" frequency="4" timeframe="120">
+    <if_matched_sid>100300</if_matched_sid>
+    <description>LAB: Kerberos anomaly - high volume of service ticket requests</description>
+    <group>kerberoast_lab,kerberos,volume_anomaly,credential_access</group>
+  </rule>
+</group>
+
+<!-- ============================================================ -->
+<!-- Privileged Logon Correlation (UC-006)                        -->
+<!-- Event ID 4672 - Special Privileges Assigned                  -->
+<!-- ============================================================ -->
+<group name="windows,authentication,">
+  <rule id="100500" level="8">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">4672</field>
+    <description>LAB: Privileged logon detected on Windows system</description>
+    <group>windows,authentication,privileged_logon,lab</group>
+  </rule>
+</group>
+
+<!-- ============================================================ -->
+<!-- Password Spraying Detection (UC-004)                         -->
+<!-- Event ID 4625 - Failed logon with bad password               -->
+<!-- ============================================================ -->
+<group name="windows,authentication,">
+  <!-- Base: failed network logon with bad password -->
+  <rule id="100600" level="6">
+    <if_sid>60122</if_sid>
+    <field name="logonType">3</field>
+    <field name="subStatus">0xc000006a</field>
+    <description>Windows: Failed network logon with bad password</description>
+    <group>authentication_failed,win_security</group>
+  </rule>
+
+  <!-- Correlation: password spraying from same IP across different usernames -->
+  <rule id="100601" level="10">
+    <if_sid>100600</if_sid>
+    <if_matched_level>6</if_matched_level>
+    <same_field>ipAddress</same_field>
+    <different_field>targetUserName</different_field>
+    <check_diff />
+    <description>Windows: Possible password spraying detected from $(ipAddress) across multiple usernames</description>
+    <group>password_spraying,brute_force,win_security</group>
+    <frequency>5</frequency>
+    <time_frame>300</time_frame>
+  </rule>
+</group>
+
+<!-- ============================================================ -->
+<!-- Suspicious Process Execution via Sysmon (UC-007)             -->
+<!-- Sysmon Event ID 1 - Process Creation                         -->
+<!-- Parent rule: 61603 (Sysmon Process Create)                  -->
+<!-- ============================================================ -->
+<group name="sysmon,suspicious_process,">
+
+  <!-- Encoded PowerShell command -->
+  <rule id="100800" level="12">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.image">powershell\.exe|pwsh\.exe</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)-e(?:ncodedcommand|nc)\s</field>
+    <description>Suspicious process: Encoded PowerShell command detected from $(win.eventdata.user)</description>
+    <mitre>
+      <id>T1059.001</id>
+    </mitre>
+    <group>suspicious_process,powershell_encoded,endpoint</group>
+  </rule>
+
+  <!-- PowerShell execution policy bypass -->
+  <rule id="100801" level="10">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.image">powershell\.exe|pwsh\.exe</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)-executionpolicy\s+(bypass|unrestricted|remotesigned)</field>
+    <description>Suspicious process: PowerShell execution policy bypass from $(win.eventdata.user)</description>
+    <mitre>
+      <id>T1059.001</id>
+    </mitre>
+    <group>suspicious_process,powershell_bypass,endpoint</group>
+  </rule>
+
+  <!-- Credential dumping tool execution -->
+  <rule id="100802" level="14">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(mimikatz|procdump(?:\.exe)?\s+-ma\s+lsass|sekurlsa::logonpasswords|lsadump|lazagne|secretsdump|privilege::debug)</field>
+    <description>Critical: Credential dumping tool executed - $(win.eventdata.commandLine)</description>
+    <mitre>
+      <id>T1003</id>
+    </mitre>
+    <group>credential_access,credential_dumping,endpoint</group>
+  </rule>
+
+  <!-- Certutil LOLBin download -->
+  <rule id="100803" level="12">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.image">certutil\.exe</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)-urlcache\s+-f</field>
+    <description>Suspicious process: Certutil file download detected from $(win.eventdata.user)</description>
+    <mitre>
+      <id>T1218</id>
+    </mitre>
+    <group>suspicious_process,lolbin,certutil_download,endpoint</group>
+  </rule>
+
+  <!-- WMI spawning command interpreter -->
+  <rule id="100804" level="10">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.parentImage">wmiprvse\.exe</field>
+    <field name="win.eventdata.image" type="pcre2">(?i)(powershell\.exe|cmd\.exe|cscript\.exe|wscript\.exe|mshta\.exe)</field>
+    <description>Suspicious process: WMI spawned command interpreter from $(win.eventdata.user) - $(win.eventdata.image)</description>
+    <mitre>
+      <id>T1047</id>
+    </mitre>
+    <group>suspicious_process,wmi_execution,endpoint</group>
+  </rule>
+
+</group>
+
+<!-- ============================================================ -->
+<!-- Firewall Correlation Rules (Planned — 101xxx range)          -->
+<!-- These require firewall logs ingesting via syslog             -->
+<!-- ============================================================ -->
+
+<!--
+  Blocked external access detection (planned)
+  See: defensive/pfsense/syslog-forwarding.md
+
+  Rule 101000: Firewall blocked connection
+  Rule 101001: Multiple blocked destinations from single source
+
+  Auth + network scan correlation (planned)
+  Rule 101200: Network activity following authentication failures
+
+  Kerberos + lateral movement correlation (planned)
+  Rule 101300: Kerberos anomaly followed by lateral movement
+
+  Privileged logon + network activity correlation (planned)
+  Rule 101400: Privileged logon followed by network activity
+-->

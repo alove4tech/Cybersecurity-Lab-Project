@@ -2,7 +2,7 @@
 # Red Team Lab Command Center — quick status dashboard for the attack host
 set -euo pipefail
 
-VERSION="1.2.0"
+VERSION="1.3.0"
 
 # Lab network constants
 GATEWAY="10.10.69.1"
@@ -147,7 +147,7 @@ fi
 echo -e "\n${YELLOW}[ Tool Inventory ]${NC}"
 tool_total=0
 tool_found=0
-for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec impacket-wmiexec certipy-ad bloodhound-python; do
+for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec impacket-wmiexec certipy-ad bloodhound-python crackmapexec xfreerdp; do
     tool_total=$((tool_total + 1))
     if command -v "$tool" >/dev/null 2>&1; then
         tool_found=$((tool_found + 1))
@@ -157,6 +157,16 @@ for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec i
     fi
 done
 echo -e "  ${DIM}($tool_found/$tool_total available)${NC}"
+
+# --- Detection Coverage Summary ---
+echo -e "\n${YELLOW}[ Detection Coverage ]${NC}"
+echo -e "  UC-001 SSH Brute Force         ${GREEN}validated${NC}   T1110"
+echo -e "  UC-002 Kerberos RC4             ${GREEN}validated${NC}   T1558.003"
+echo -e "  UC-003 Lateral Movement         ${GREEN}validated${NC}   T1021/T1595"
+echo -e "  UC-004 Password Spraying        ${GREEN}validated${NC}   T1110.003"
+echo -e "  UC-005 Kerberos Anomaly         ${GREEN}validated${NC}   T1558.003"
+echo -e "  UC-006 Privileged Logon         ${GREEN}validated${NC}   T1078"
+echo -e "  UC-007 Suspicious Process       ${GREEN}validated${NC}   T1059.001/T1003"
 
 # Quick commands — detect the default interface, fall back gracefully
 if IFACE=$(ip route 2>/dev/null | awk '/default/ {print $5; exit}') && [[ -n "$IFACE" ]]; then
