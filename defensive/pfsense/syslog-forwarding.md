@@ -277,7 +277,7 @@ Trigger alert when:
   </rule>
 
   <rule id="100201" level="8">
-    <if_sid>100200</rule>
+    <if_sid>100200</if_sid>
     <same_source_ip />
     <different_dst_ip />
     <description>Lateral movement: Multiple destination IPs from single source</description>
@@ -329,13 +329,13 @@ Trigger alert when:
 ```xml
 <group name="firewall,pfsense,blocked_traffic,">
   <rule id="101000" level="7">
-    <if_sid>100200</rule>
+    <if_sid>100200</if_sid>
     <field name="action">block</field>
     <description>Firewall blocked connection</description>
   </rule>
 
   <rule id="101001" level="9">
-    <if_sid>101000</rule>
+    <if_sid>101000</if_sid>
     <same_source_ip />
     <different_dst_ip />
     <description>Blocked external access: Multiple destinations from single source</description>
@@ -388,7 +388,7 @@ Trigger alert when:
 ```xml
 <group name="firewall,pfsense,reconnaissance,">
   <rule id="101100" level="12">
-    <if_sid>100200</rule>
+    <if_sid>100200</if_sid>
     <same_source_ip />
     <same_dst_port />
     <different_dst_ip />
@@ -427,7 +427,7 @@ Trigger alert when:
 ```xml
 <group name="correlation,credential_abuse,">
   <rule id="101200" level="10">
-    <if_sid>100100,100201</if_sid> <!-- UC-001 brute force OR UC-003 lateral movement -->
+    <if_sid>100100,100201</if_sid> <!-- UC-002 Kerberos RC4 OR UC-003 lateral movement -->
     <same_source_ip />
     <description>Correlation: Network activity following authentication failures</description>
     <mitre>
