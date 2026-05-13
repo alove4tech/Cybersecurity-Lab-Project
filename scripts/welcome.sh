@@ -147,7 +147,7 @@ fi
 echo -e "\n${YELLOW}[ Tool Inventory ]${NC}"
 tool_total=0
 tool_found=0
-for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec impacket-wmiexec certipy-ad bloodhound-python crackmapexec xfreerdp; do
+for tool in msfconsole nmap responder bloodhound sqlmap gobuster nikto netexec impacket-wmiexec certipy-ad bloodhound-python hydra xfreerdp; do
     tool_total=$((tool_total + 1))
     if command -v "$tool" >/dev/null 2>&1; then
         tool_found=$((tool_found + 1))

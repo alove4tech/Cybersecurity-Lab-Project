@@ -255,6 +255,8 @@ openvpn: user1/10.10.69.50:50202 MULTI_sva: pool returned IPv4=10.10.70.10
 - Severity: Medium (High if correlated with failed auth)
 - MITRE ATT&CK: T1021 – Remote Services
 
+> **Note:** UC-003 is the only firewall-based detection currently validated. The two planned detections below do not yet have UC IDs assigned and will be numbered when development begins.
+
 **Objective:** Detect network scanning behavior indicating lateral movement attempts.
 
 ---

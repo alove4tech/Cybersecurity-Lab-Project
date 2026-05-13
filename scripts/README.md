@@ -28,7 +28,7 @@ chmod +x welcome.sh
 - **Wazuh Dashboard (port 55000)** — web UI for the SIEM
 - **Target host reachability** — pings DC01 and Wazuh to confirm they're alive
 - **Service status** — PostgreSQL (Metasploit DB), Responder, and Wazuh agent
-- **Installed tools** — scans for common offensive tools on PATH (msfconsole, nmap, responder, bloodhound, sqlmap, gobuster, nikto, netexec, impacket-wmiexec, certipy-ad, bloodhound-python, crackmapexec, xfreerdp) — 13 tools total, with availability count
+- **Installed tools** — scans for common offensive tools on PATH (msfconsole, nmap, responder, bloodhound, sqlmap, gobuster, nikto, netexec, impacket-wmiexec, certipy-ad, bloodhound-python, hydra, xfreerdp) — 13 tools total, with availability count
 - **Detection coverage** — quick summary of the 7 validated use cases and their MITRE ATT&CK mappings
 - **Quick commands** — handy one-liners for common lab tasks
 
