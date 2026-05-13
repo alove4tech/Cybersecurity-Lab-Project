@@ -19,6 +19,7 @@ SOC + detection lab running on Proxmox. Isolated VLAN (10.10.69.0/24) with Activ
 - **Firewall:** pfSense (10.10.69.1)
 - **Domain Controller:** Windows Server 2022 (10.10.69.10, corp.local)
 - **SIEM:** Wazuh (Windows + Linux agents)
+- **RMM:** Tactical RMM (10.10.69.15; rmm.lab.local / api.lab.local / mesh.lab.local)
 - **Attack box:** Debian with Kali tools
 - **Targets:** Metasploitable 2/3
 
@@ -65,6 +66,7 @@ For each use case I:
 - [Network configuration](docs/03-network-configuration.md)
 - [Wazuh deployment](docs/04-wazuh-deployment.md)
 - [Evidence collection guide](docs/05-evidence-guide.md)
+- [Tactical RMM deployment](docs/06-tactical-rmm-deployment.md)
 - [pfSense syslog forwarding notes](defensive/pfsense/syslog-forwarding.md)
 - [Detection use cases](detections/)
 - [IR playbooks](incident-response/)
