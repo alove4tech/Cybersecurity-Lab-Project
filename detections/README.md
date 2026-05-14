@@ -38,6 +38,23 @@ Each use case includes:
 
 ---
 
+
+## Wazuh Rule Deployment Status
+
+The current custom Wazuh ruleset contains 23 deployed rules mapped to the seven documented use cases.
+
+| Use Case | Rule IDs | Coverage | Status |
+|----------|----------|----------|--------|
+| UC-001 SSH Brute Force | 100001, 100002, 100003 | SSH authentication failures, 8 failures/3 minutes, brute force followed by success | 🟢 Validated |
+| UC-002 Kerberos RC4 | 100100, 100101 | Kerberos Event ID 4769 RC4 service ticket detection | 🟢 Validated |
+| UC-003 Lateral Movement | 100200, 100201, 100400, 100401 | pfSense filterlog base parsing, multi-destination scans, port sweeps, port scans | 🟢 Validated |
+| UC-004 Password Spraying | 100600, 100601 | Event ID 4625 failures across multiple usernames from one source IP | 🟢 Validated |
+| UC-005 Kerberos Anomaly | 100300, 100301, 100302, 100303 | SPN enumeration, targeted SPN activity, high-volume Kerberos ticket requests | 🟢 Validated |
+| UC-006 Privileged Logon | 100500, 100501, 100502 | Privileged Windows logons, service account filtering, remote admin logon correlation | 🟢 Validated |
+| UC-007 Suspicious Process | 100800, 100801, 100802, 100803, 100804 | Sysmon suspicious process execution, PowerShell, credential dumping, certutil, WMI | 🟢 Validated |
+
+---
+
 ## Detection Categories
 
 ### Authentication Monitoring

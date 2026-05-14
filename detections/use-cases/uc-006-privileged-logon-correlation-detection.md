@@ -99,16 +99,21 @@ This confirms both events belong to the same authenticated session.
 
 ## Rule Implementation
 
-A custom Wazuh rule was created to alert on Event ID 4672.
+The privileged logon use case uses a dedicated 100500-series Wazuh rule chain. This keeps Windows privileged-logon logic separate from the 100400-series network-scanning rules.
 
-The rule triggers when the Windows Security log reports that special privileges were assigned to a new logon session. This provides a reliable signal for privileged activity and can then be correlated during investigation with Event ID 4624 by matching Logon ID values.
+| Rule ID | Purpose | Notes |
+|---------|---------|-------|
+| 100500 | Privileged logon base rule | Detects Windows Event ID 4672 when special privileges are assigned to a new logon |
+| 100501 | Remote administrative logon | Focuses on privileged sessions associated with remote logon activity |
+| 100502 | Privileged access correlation | Correlates privileged access patterns while filtering noisy service account activity |
 
 ### Example Alert Conditions
 
 - Event ID 4672 detected
 - Windows Security channel
-- Domain Controller source
-- Privileged account identified
+- Domain Controller or Windows endpoint source
+- Service-account noise filtered where applicable
+- Privileged account or remote administrative session identified
 
 ### Example Wazuh Rule
 
@@ -121,7 +126,7 @@ The rule triggers when the Windows Security log reports that special privileges 
 </rule>
 ```
 
-**Note:** In this lab, direct correlation between 4624 and 4672 was validated manually during investigation by matching Logon ID values in collected events.
+**Note:** Event ID 4624 and Event ID 4672 correlation is validated by comparing Logon ID values and reviewing source host, source IP, and logon type.
 
 ---
 
@@ -197,8 +202,8 @@ To determine significance, review:
 
 ## Detection Limitations
 
-1. This lab implementation alerts on privileged logon but does not fully automate correlation between Event ID 4624 and Event ID 4672.
-2. Correlation was validated manually by comparing Logon ID values in archived logs.
+1. This lab implementation provides event detection and rule-chain support for privileged logon investigation.
+2. The most reliable session context still comes from comparing Logon ID values in the collected Event ID 4624 and Event ID 4672 records.
 3. In production environments, more complete correlation may require:
    - SIEM queries
    - Advanced rule chaining
@@ -251,11 +256,11 @@ When this alert triggers:
 
 ✔ Event ID 4672 validated in lab environment
 ✔ Event ID 4624 correlation verified by Logon ID
-✔ Custom Wazuh rule created and validated
+✔ Custom Wazuh rules created and validated (IDs: 100500, 100501, 100502)
+✔ Service-account filtering documented
 ✔ Remote administrative test activity generated
 ✔ False positive considerations documented
 ✔ Hardening recommendations documented
-⏳ Full automated SIEM correlation – future enhancement
 ⏳ Baseline-driven anomaly detection – future enhancement
 
 ---

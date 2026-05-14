@@ -119,9 +119,9 @@ Trigger when:
 ```xml
 <group name="firewall,pfsense,lateral_movement,">
   <rule id="100201" level="8">
-    <if_sid>100200</rule>
-    <same_source_ip />
-    <different_dst_ip />
+    <if_sid>100200</if_sid>
+    <same_srcip />
+    <different_dstip />
     <options>alert_by_email</options>
     <description>Lateral movement: Multiple destination IPs from single source (≥ 10 in 5m)</description>
     <mitre>
@@ -149,10 +149,10 @@ Trigger when:
 ```xml
 <group name="firewall,pfsense,reconnaissance,">
   <rule id="100400" level="12">
-    <if_sid>100200</rule>
-    <same_source_ip />
+    <if_sid>100200</if_sid>
+    <same_srcip />
     <same_dst_port />
-    <different_dst_ip />
+    <different_dstip />
     <description>Port sweep: Same port accessed on multiple hosts (≥ 15 in 2m)</description>
     <mitre>
       <id>T1595.001</id>
@@ -178,8 +178,8 @@ Trigger when:
 
 ```xml
 <rule id="100401" level="10">
-  <if_sid>100200</rule>
-  <same_source_ip />
+  <if_sid>100200</if_sid>
+  <same_srcip />
   <same_dst_ip />
   <different_dst_port />
   <description>Port scanning: Multiple ports accessed on single host (≥ 20 in 3m)</description>

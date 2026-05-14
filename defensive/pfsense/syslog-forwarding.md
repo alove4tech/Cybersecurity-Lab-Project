@@ -103,77 +103,40 @@ tcpdump -i any udp port 514 -n -v
 
 ## Wazuh Configuration
 
-### Option 1: Wazuh Manager with rsyslog Receiver
+The Wazuh manager is configured to receive pfSense syslog directly on UDP 514. The listener is restricted to the firewall source IP (`10.10.69.1`) so the manager is not accepting arbitrary syslog from the full lab subnet.
 
-Wazuh Manager includes rsyslog for syslog ingestion. Configure to accept pfSense logs.
+### Wazuh Manager Syslog Listener
 
-#### Configure rsyslog to Listen on UDP 514
-
-Edit `/etc/rsyslog.conf` on Wazuh Manager:
-
-```bash
-# Add these lines to accept remote syslog
-$ModLoad imudp
-$UDPServerRun 514
-$UDPServerAddress 10.10.69.20  # Wazuh server IP
-
-# Create pfSense-specific log file
-$template PFSenseFormat,"%timestamp% %hostname% %syslogtag% %msg%\n"
-$InputTCPServerBindRuleset pfSense
-*.* ?PFSenseFormat
-
-# Restart rsyslog
-systemctl restart rsyslog
-```
-
-#### Configure Filebeat to Read pfSense Logs
-
-Edit `/etc/filebeat/filebeat.yml`:
-
-```yaml
-filebeat.inputs:
-  # ... existing inputs ...
-
-  # pfSense syslog input
-  - type: log
-    enabled: true
-    paths:
-      - /var/log/pfsense.log
-    fields:
-      log_type: firewall
-      source: pfsense
-    fields_under_root: true
-
-output.elasticsearch:
-  hosts: ["localhost:9200"]
-
-# Restart Filebeat
-systemctl restart filebeat
-```
-
----
-
-### Option 2: Direct Wazuh Agent on Wazuh Server
-
-If using the all-in-one Wazuh installer, configure the local Wazuh agent to monitor pfSense logs.
-
-#### Configure Agent to Read pfSense Logs
-
-Edit `/var/ossec/etc/ossec.conf` (on Wazuh server):
+Edit `/var/ossec/etc/ossec.conf` on the Wazuh manager and add a remote syslog listener similar to the following:
 
 ```xml
-<ossec_config>
-  <localfile>
-    <log_format>syslog</log_format>
-    <location>/var/log/pfsense.log</location>
-  </localfile>
-</ossec_config>
+<remote>
+  <connection>syslog</connection>
+  <port>514</port>
+  <protocol>udp</protocol>
+  <allowed-ips>10.10.69.1</allowed-ips>
+</remote>
 ```
 
-**Restart Wazuh Agent:**
+Restart the manager after updating the configuration:
 
 ```bash
-systemctl restart wazuh-agent
+systemctl restart wazuh-manager
+systemctl status wazuh-manager
+```
+
+### Listener Verification
+
+```bash
+ss -lunp | grep ':514'
+```
+
+Expected result: Wazuh is listening on UDP 514 for pfSense syslog.
+
+The pfSense side still needs remote syslog enabled in the pfSense web interface and pointed to `10.10.69.20:514/UDP`. Once enabled, verify traffic on the Wazuh manager:
+
+```bash
+tcpdump -i any host 10.10.69.1 and udp port 514 -n -v
 ```
 
 ---
@@ -255,7 +218,7 @@ openvpn: user1/10.10.69.50:50202 MULTI_sva: pool returned IPv4=10.10.70.10
 - Severity: Medium (High if correlated with failed auth)
 - MITRE ATT&CK: T1021 – Remote Services
 
-> **Note:** UC-003 is the only firewall-based detection currently validated. The two planned detections below do not yet have UC IDs assigned and will be numbered when development begins.
+> **Note:** UC-003 now includes the pfSense `filterlog` base rule and three correlation rules for multi-destination scanning, port sweeps, and port scans.
 
 **Objective:** Detect network scanning behavior indicating lateral movement attempts.
 
@@ -268,28 +231,16 @@ Trigger alert when:
 - Or single source IP probes **≥ 20 unique ports**
 - Within a 5-minute window
 
-**Wazuh Rule:**
+**Wazuh Rules:**
 
-```xml
-<group name="firewall,pfsense,lateral_movement,">
-  <rule id="100200" level="10">
-    <if_sid>5500</if_sid> <!-- pfSense firewall rule -->
-    <field name="action">pass</field>
-    <description>Firewall connection logged</description>
-  </rule>
+| Rule ID | Purpose |
+|---------|---------|
+| 100200 | pfSense `filterlog` base rule |
+| 100201 | Multiple destination IPs from one source |
+| 100400 | Same destination port contacted across multiple hosts |
+| 100401 | Multiple destination ports probed on one host |
 
-  <rule id="100201" level="8">
-    <if_sid>100200</if_sid>
-    <same_source_ip />
-    <different_dst_ip />
-    <description>Lateral movement: Multiple destination IPs from single source</description>
-    <mitre>
-      <id>T1021</id>
-    </mitre>
-    <group>lateral_movement,scanning</group>
-  </rule>
-</group>
-```
+The deployed rules use Wazuh field-correlation syntax such as `same_srcip` and `different_dstip`.
 
 ---
 
@@ -338,8 +289,8 @@ Trigger alert when:
 
   <rule id="101001" level="9">
     <if_sid>101000</if_sid>
-    <same_source_ip />
-    <different_dst_ip />
+    <same_srcip />
+    <different_dstip />
     <description>Blocked external access: Multiple destinations from single source</description>
     <mitre>
       <id>T1071</id>
@@ -365,14 +316,14 @@ Trigger alert when:
 
 ---
 
-### Port Sweep / Network Recon (Planned)
+### Port Sweep / Network Recon
 
 **Detection Metadata:**
 - Log Source: pfSense firewall logs
 - Severity: High
 - MITRE ATT&CK: T1595 – Active Scanning
 
-> **Note:** This is a planned firewall-based detection. Rule IDs use the 101xxx range to avoid conflicts with host-based detection rules.
+> **Note:** Port sweep and port scan logic is implemented under UC-003 with rule IDs `100400` and `100401`.
 
 **Objective:** Detect port sweeping behavior indicating reconnaissance.
 
@@ -389,11 +340,11 @@ Trigger alert when:
 
 ```xml
 <group name="firewall,pfsense,reconnaissance,">
-  <rule id="101100" level="12">
+  <rule id="100400" level="12">
     <if_sid>100200</if_sid>
-    <same_source_ip />
+    <same_srcip />
     <same_dst_port />
-    <different_dst_ip />
+    <different_dstip />
     <description>Port sweep: Same port accessed on multiple hosts</description>
     <mitre>
       <id>T1595.001</id>
@@ -414,7 +365,7 @@ Trigger alert when:
 
 2. Check firewall logs for multiple connections to port 22
 
-3. Verify Wazuh rule 101100 triggers
+3. Verify Wazuh rule 100400 triggers
 
 ---
 
@@ -430,7 +381,7 @@ Trigger alert when:
 <group name="correlation,credential_abuse,">
   <rule id="101200" level="10">
     <if_sid>100100,100201</if_sid> <!-- UC-002 Kerberos RC4 OR UC-003 lateral movement -->
-    <same_source_ip />
+    <same_srcip />
     <description>Correlation: Network activity following authentication failures</description>
     <mitre>
       <id>T1110,T1021</id>
@@ -480,7 +431,7 @@ Administrator credential compromise → attacker accesses new systems.
 <group name="correlation,privileged_lateral,">
   <rule id="101400" level="13">
     <if_sid>61602,100200</if_sid> <!-- 4672 OR firewall connection -->
-    <same_source_ip />
+    <same_srcip />
     <description>Correlation: Privileged logon followed by network activity</description>
     <mitre>
       <id>T1078,T1021</id>
@@ -518,7 +469,7 @@ Create a new dashboard in Wazuh with these panels:
 - Time range: Last 7d
 
 **Panel 5: Lateral Movement Alerts (Data Table)**
-- Query: `rule.id: 100201 OR rule.id: 101100`
+- Query: `rule.id: 100201 OR rule.id: 100400 OR rule.id: 100401`
 - Columns: timestamp, source_ip, dst_ip, dst_port, action
 
 **Panel 6: Correlated Alerts Table**
@@ -530,13 +481,12 @@ Create a new dashboard in Wazuh with these panels:
 ## Validation Checklist
 
 - [ ] pfSense remote syslog enabled
-- [ ] Wazuh server receiving syslog traffic (tcpdump verified)
-- [ ] Filebeat reading pfSense logs
-- [ ] Wazuh agent configured to monitor pfSense logs
+- [x] Wazuh UDP 514 listener configured
+- [ ] Wazuh server receiving pfSense syslog traffic (tcpdump verified)
 - [ ] Logs visible in Wazuh Dashboard → Events viewer
-- [ ] UC-003 lateral movement detection validated
+- [x] UC-003 Wazuh rules deployed
+- [x] Port sweep and port scan rules deployed
 - [ ] Blocked external access detection validated
-- [ ] Port sweep detection validated
 - [ ] Correlation rules tested
 - [ ] Dashboard panels configured
 
@@ -553,19 +503,15 @@ tcpdump -i any udp port 514 -n -v
 ```
 Expected: Packets from 10.10.69.1
 
-**Check 2: rsyslog receiving**
+**Check 2: Wazuh UDP listener**
 ```bash
-# Check rsyslog is listening
-netstat -tuln | grep 514
+ss -lunp | grep ":514"
 ```
-Expected: `0.0.0.0:514`
+Expected: UDP 514 listener owned by the Wazuh manager process.
 
-**Check 3: Filebeat reading**
-```bash
-# Check Filebeat logs
-journalctl -u filebeat -f
-```
-Look for errors accessing `/var/log/pfsense.log`
+**Check 3: Source restriction**
+
+Confirm `/var/ossec/etc/ossec.conf` allows only the pfSense firewall IP (`10.10.69.1`) for this listener.
 
 ---
 

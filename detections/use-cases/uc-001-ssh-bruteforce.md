@@ -38,14 +38,28 @@ Key Fields Parsed:
 
 Trigger alert when:
 
-- ≥ X failed SSH attempts
-- From same source IP
-- Within Y minutes
+- Failed SSH authentication is observed for valid or invalid users
+- Eight failures occur from the same source IP within three minutes
+- A successful SSH login follows brute force activity from the same source
 
 Optional Correlation Enhancement:
 - Escalate severity if:
   - Successful login occurs after failures
   - Privileged account targeted
+
+---
+
+## Rule Implementation
+
+The SSH brute force use case uses three custom Wazuh rules:
+
+| Rule ID | Purpose | Notes |
+|---------|---------|-------|
+| 100001 | SSH authentication failure | Matches failed password activity for valid and invalid users using Wazuh's SSH parent rules |
+| 100002 | SSH brute force correlation | Triggers when 8 failed attempts occur within 3 minutes from the same source IP |
+| 100003 | Brute force followed by successful login | Raises severity when a successful SSH login follows the brute force pattern |
+
+The rule chain covers failed authentication messages associated with Wazuh SSH rule IDs `5716`, `5710`, and `5760`, which provides better coverage than a single hardcoded sample rule.
 
 ---
 

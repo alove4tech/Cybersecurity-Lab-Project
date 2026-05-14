@@ -27,7 +27,7 @@ Wazuh serves as the SIEM (Security Information and Event Management) platform fo
 │  - Active Response (optional)                                │
 └─────────────────────────────────────────────────────────────┘
           │
-          │ Agent Communication (1514/TCP, 1515/TCP, 1516/UDP)
+          │ Agent Communication (1514/TCP, 1515/TCP) + Syslog (514/UDP)
           ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    Agents                                    │
@@ -46,9 +46,9 @@ Wazuh serves as the SIEM (Security Information and Event Management) platform fo
 ### Server Information
 
 - **Hostname:** `wazuh-server`
-- **IP Address:** reserve a static address on the lab VLAN, preferably `10.10.69.20`
+- **IP Address:** `10.10.69.20`
 - **Operating System:** Debian or Ubuntu LTS
-- **Wazuh Version:** 4.9.x (use the latest stable release)
+- **Wazuh Version:** 4.9.x (latest stable release at time of deployment)
 - **Deployment Method:** All-in-One install first, split components later only if scale or tuning requires it
 
 This keeps the first deployment simple and matches the rest of the lab, which is already standardized on the `10.10.69.0/24` isolated VLAN behind pfSense.
@@ -120,11 +120,11 @@ msiexec.exe /i wazuh-agent-<version>.msi /q WAZUH_MANAGER="10.10.69.20" WAZUH_AG
 
 ### pfSense Agent (Syslog Forwarding)
 
-pfSense does not run a native Wazuh agent. Instead, logs are forwarded via syslog:
+pfSense does not run a native Wazuh agent. Instead, firewall telemetry is forwarded via syslog. The Wazuh manager has a UDP 514 listener enabled in `ossec.conf` and restricted to the pfSense firewall (`10.10.69.1`).
 
 1. Configure remote syslog in pfSense: Status → System Logs → Settings
 2. Set remote log server to Wazuh manager IP (`10.10.69.20`)
-3. Use UDP 514 (or TLS 6514 for encrypted)
+3. Use UDP 514
 4. Enable log categories: Firewall, DHCP, System, VPN
 5. Verify ingestion in Wazuh Dashboard → Events viewer
 
@@ -139,7 +139,7 @@ pfSense does not run a native Wazuh agent. Instead, logs are forwarded via syslo
 | win10-client | DHCP | Windows 10 | Wazuh Agent | Windows Security, Sysmon | ✅ Enrolled |
 | win11-client | DHCP | Windows 11 | Wazuh Agent | Windows Security, Sysmon | ✅ Enrolled |
 | Debian-Attack | DHCP (typically 10.10.69.50) | Debian | Wazuh Agent | /var/log/auth.log, syslog | ✅ Enrolled |
-| pfSense | 10.10.69.1 | pfSense | Syslog Forwarder | Firewall, DHCP, System | ✅ Configured |
+| pfSense | 10.10.69.1 | pfSense | Syslog Forwarder | Firewall, DHCP, System | Wazuh receiver ready; forwarding verification pending |
 
 ---
 
@@ -172,6 +172,12 @@ Agents monitor:
 
 ### Firewall Log Configuration (pfSense)
 
+Wazuh manager listener status:
+
+- UDP 514: listening for pfSense syslog
+- Source restriction: `10.10.69.1` only
+- Detection dependency: pfSense remote syslog forwarding to `10.10.69.20:514/UDP`
+
 Log categories to forward:
 - Firewall rules (allow/deny)
 - NAT traffic
@@ -183,29 +189,42 @@ Log categories to forward:
 
 ## Custom Rules
 
-### Rule ID 100100: Kerberos RC4 Ticket Detection
+The custom ruleset contains 23 deployed Wazuh rules aligned to seven detection use cases. Rules are maintained in the Wazuh manager local rules configuration and validated with Wazuh rule testing before manager restart.
 
-**File:** `/var/ossec/ruleset/rules/local_rules.xml` (on manager)
+| Use Case | Rule IDs | Purpose | Status |
+|----------|----------|---------|--------|
+| UC-001 SSH Brute Force | 100001, 100002, 100003 | SSH failed authentication, brute force correlation, and brute force followed by successful login | ✅ Deployed |
+| UC-002 Kerberos RC4 | 100100, 100101 | RC4 Kerberos service ticket detection using Wazuh's Windows 4769 parent rule | ✅ Deployed |
+| UC-003 Lateral Movement | 100200, 100201, 100400, 100401 | pfSense `filterlog` base rule, multi-destination scan, port sweep, and port scan correlation | ✅ Deployed |
+| UC-004 Password Spraying | 100600, 100601 | Windows 4625 failed network logons across multiple usernames from the same source IP | ✅ Deployed |
+| UC-005 Kerberos Anomaly | 100300, 100301, 100302, 100303 | Kerberos RC4 ticket grouping, SPN enumeration, SPN targeting, and volume anomaly correlation | ✅ Deployed |
+| UC-006 Privileged Logon | 100500, 100501, 100502 | Privileged logon detection with filtering for service accounts and remote administrative logons | ✅ Deployed |
+| UC-007 Suspicious Process | 100800, 100801, 100802, 100803, 100804 | Sysmon process execution detections for PowerShell, credential dumping, LOLBins, and WMI execution | ✅ Deployed |
 
-```xml
-<group name="windows,kerberos,">
-  <rule id="100100" level="12">
-    <if_sid>61602</if_sid> <!-- Base Windows 4769 rule -->
-    <field name="TicketEncryptionType">0x17</field>
-    <description>Kerberos service ticket issued with RC4 encryption - Potential Kerberoasting</description>
-    <mitre>
-      <id>T1558.003</id>
-    </mitre>
-    <group>kerberos,kerberoasting,privilege_escalation</group>
-  </rule>
-</group>
+### Rule Deployment Notes
+
+- UC-001 was rebuilt from a placeholder sample rule into three production-style SSH authentication rules. The final chain detects failed SSH authentication for valid and invalid users, correlates 8 failures within 3 minutes, and raises severity when a successful SSH login follows brute force activity.
+- UC-002 uses Wazuh built-in rule `61602` as the parent for Windows Event ID 4769.
+- UC-003 includes a pfSense `filterlog` base rule plus correlation rules using Wazuh field correlation syntax such as `same_srcip`, `different_dstip`, and destination port grouping.
+- UC-004 is separated from UC-003 and uses its own 100600-series rules for password spraying across multiple usernames.
+- UC-006 was moved into the 100500-series to keep privileged-logon logic separate from network-scanning logic and includes filtering for noisy service account activity.
+- UC-007 uses Sysmon Event ID 1 telemetry from all Windows endpoints.
+
+### Listener Validation
+
+Current Wazuh listener checks:
+
+```bash
+systemctl status wazuh-manager
+ss -lunp | grep ':514'    # pfSense syslog
+ss -ltnp | grep ':1514'   # Wazuh agent communication
 ```
 
-**Testing the Rule:**
-1. Force RC4 encryption on a service account
-2. Request service ticket: `klist get <SPN>`
-3. Confirm 4769 event logs `TicketEncryptionType: 0x17`
-4. Verify Wazuh rule 100100 fires in dashboard
+Expected state:
+
+- Wazuh manager: active/running
+- UDP 514: listening for pfSense syslog
+- TCP 1514: listening for Wazuh endpoint communication
 
 ---
 
@@ -242,11 +261,13 @@ Log categories to forward:
 - [x] DC01 agent enrolled and reporting
 - [x] Windows client agents enrolled
 - [x] Linux attack VM agent enrolled
-- [x] pfSense syslog forwarding configured
+- [x] Wazuh UDP 514 syslog listener configured for pfSense
+- [ ] pfSense remote syslog forwarding enabled and verified
 - [x] Windows Security events ingesting (4624, 4625, 4672, 4768, 4769)
 - [x] Linux auth.log ingesting
 - [x] Sysmon events ingesting (Event ID 1 on Windows endpoints)
-- [x] Custom rule 100100 deployed
+- [x] Custom Wazuh rules 100001–100804 deployed where applicable
+- [x] All 23 custom rules aligned to UC-001 through UC-007
 - [x] Alert generation validated for UC-001 through UC-007
 - [ ] Dashboards configured (in progress)
 - [ ] Wazuh Active Response configured (planned)
@@ -287,7 +308,8 @@ telnet 10.10.69.20 1514
 
 - [x] Stand up `wazuh-server` at `10.10.69.20` and document final package versions
 - [x] Enroll DC01 first, then the two Windows clients, then Debian-Attack
-- [x] Complete pfSense syslog forwarding integration
+- [x] Configure Wazuh UDP 514 listener for pfSense syslog
+- [ ] Enable and verify pfSense remote syslog forwarding to `10.10.69.20:514/UDP`
 - [x] Implement 4625 burst + password spray correlation (UC-004, rules 100600–100601)
 - [x] Build correlation rules for lateral movement detection (rules 100200–100401)
 - [x] Kerberos anomaly detection (UC-005, rules 100300–100303)

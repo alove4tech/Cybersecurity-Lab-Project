@@ -136,10 +136,12 @@ Post-remediation 4769 shows:
 ```
 
 **Rule Breakdown:**
-- `if_sid>61602`: Inherits from Wazuh's built-in Windows 4769 decoder
+- `if_sid>61602`: Inherits from Wazuh's built-in Windows 4769 rule
 - `level="12"`: High severity alert (10-12 range for critical)
 - `TicketEncryptionType>0x17`: Matches RC4-HMAC encryption
 - MITRE ATT&CK T1558.003: Kerberoasting technique
+
+A companion rule, `100101`, is used for related RC4 service-ticket alerting and correlation support in the deployed ruleset.
 
 **Testing the Rule:**
 
