@@ -9,8 +9,12 @@ This Active Directory lab supports:
 
 ## Domain
 - Domain Name: corp.local
-- Forest Functional Level: Windows Server 2022
 - Domain Controller: DC01
+- Windows Server Version: Windows Server 2022
+- Forest Functional Level: `Windows2016Forest`
+- Domain Functional Level: `Windows2016Domain`
+
+Windows Server 2019 and Windows Server 2022 domain controllers continue to use the Windows Server 2016 functional level identifiers. Microsoft did not introduce separate forest or domain functional levels for those server releases.
 
 ## Network
 - Network: 10.10.69.0/24
