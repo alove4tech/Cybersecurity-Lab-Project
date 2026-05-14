@@ -101,7 +101,7 @@ check_tcp_port "$WAZUH_MANAGER" 55000 "Wazuh Dashboard"
 
 # TARGET REACHABILITY
 echo -e "\n${YELLOW}[ Target Hosts ]${NC}"
-for host in "DC01:10.10.69.10" "Wazuh:10.10.69.20"; do
+for host in "DC01:10.10.69.10" "Wazuh:10.10.69.20" "Tactical-RMM:10.10.69.15"; do
     label="${host%%:*}"
     addr="${host##*:}"
     if ping -c 1 -W 1 "$addr" >/dev/null 2>&1; then

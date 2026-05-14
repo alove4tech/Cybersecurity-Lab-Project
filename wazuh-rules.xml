@@ -11,6 +11,8 @@
     100800–100804 Suspicious process execution via Sysmon (UC-007)
     101000–101400 Firewall correlation rules (planned)
 
+  All rules include MITRE ATT&CK technique mappings for dashboard integration.
+
   Restart Wazuh Manager after changes:
     systemctl restart wazuh-manager
   Validate syntax first:
@@ -40,6 +42,7 @@
   <rule id="100200" level="0">
     <match>filterlog</match>
     <description>pfSense firewall event logged</description>
+    <group>firewall,pfsense</group>
   </rule>
 </group>
 
@@ -163,6 +166,9 @@
     <if_group>windows</if_group>
     <field name="win.system.eventID">4672</field>
     <description>LAB: Privileged logon detected on Windows system</description>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
     <group>windows,authentication,privileged_logon,lab</group>
   </rule>
 </group>
@@ -178,6 +184,9 @@
     <field name="logonType">3</field>
     <field name="subStatus">0xc000006a</field>
     <description>Windows: Failed network logon with bad password</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
     <group>authentication_failed,win_security</group>
   </rule>
 
@@ -189,6 +198,9 @@
     <different_field>targetUserName</different_field>
     <check_diff />
     <description>Windows: Possible password spraying detected from $(ipAddress) across multiple usernames</description>
+    <mitre>
+      <id>T1110.003</id>
+    </mitre>
     <group>password_spraying,brute_force,win_security</group>
     <frequency>5</frequency>
     <time_frame>300</time_frame>

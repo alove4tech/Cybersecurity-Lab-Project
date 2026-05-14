@@ -48,28 +48,32 @@ Wazuh serves as the SIEM (Security Information and Event Management) platform fo
 - **Hostname:** `wazuh-server`
 - **IP Address:** reserve a static address on the lab VLAN, preferably `10.10.69.20`
 - **Operating System:** Debian or Ubuntu LTS
-- **Wazuh Version:** 4.8.x target for this build
+- **Wazuh Version:** 4.9.x (use the latest stable release)
 - **Deployment Method:** All-in-One install first, split components later only if scale or tuning requires it
 
 This keeps the first deployment simple and matches the rest of the lab, which is already standardized on the `10.10.69.0/24` isolated VLAN behind pfSense.
 
 ### Component Versions
 
-- **Wazuh Manager:** v4.8.x
-- **Wazuh Indexer:** OpenSearch
-- **Wazuh Dashboard:** Kibana-based
-- **Filebeat:** Latest compatible
+- **Wazuh Manager:** v4.9.x (or latest stable)
+- **Wazuh Indexer:** OpenSearch (bundled with all-in-one installer)
+- **Wazuh Dashboard:** Web UI (bundled with all-in-one installer, default port 443)
+- **Filebeat:** Bundled with all-in-one installer
+
+> **Note:** The all-in-one installer handles all component versions automatically. Replace `4.9` in URLs below with the current major.minor version if a newer release is available. Check https://documentation.wazuh.com/current/installation-guide.html for the latest.
 
 ### Installation Method
 
 All-In-One installation (single-node deployment for lab scale):
 ```bash
-# Download Wazuh installation script
-curl -sO https://packages.wazuh.com/4.8/wazuh-install.sh
+# Download Wazuh installation script (replace 4.9 with current version)
+curl -sO https://packages.wazuh.com/4.9/wazuh-install.sh
 
 # Run installer
-bash wazuh-install.sh -a <manager-node-ip>
+bash wazuh-install.sh -a
 ```
+
+After installation completes, the script outputs the admin password and confirms the dashboard URL (typically `https://10.10.69.20`). Save these credentials.
 
 ---
 
@@ -86,7 +90,7 @@ bash wazuh-install.sh -a <manager-node-ip>
 ### Linux Agent (Debian/Ubuntu)
 
 ```bash
-# Add Wazuh repository
+# Add Wazuh repository (replace 4.x with current major version)
 curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --dearmor -o /usr/share/keyrings/wazuh.gpg
 echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt stable main" | tee /etc/apt/sources.list.d/wazuh.list
 
@@ -106,9 +110,9 @@ systemctl start wazuh-agent
 ### Windows Agent
 
 ```powershell
-# Download Wazuh agent MSI
+# Download Wazuh agent MSI from https://packages.wazuh.com/4.x/windows/
 # Install via command line with manager IP
-msiexec.exe /i wazuh-agent-4.8.0-1.msi /q WAZUH_MANAGER="10.10.69.20" WAZUH_AGENT_GROUP="windows"
+msiexec.exe /i wazuh-agent-<version>.msi /q WAZUH_MANAGER="10.10.69.20" WAZUH_AGENT_GROUP="windows"
 
 # Start agent (auto-starts as service)
 # Verify: Get-Service Wazuh
