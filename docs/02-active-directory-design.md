@@ -25,7 +25,7 @@ Windows Server 2019 and Windows Server 2022 domain controllers continue to use t
 - Isolated lab network
 - No trust relationships
 - No external exposure
-- Logging planned via Wazuh agent
+- Wazuh agent deployed for Windows event collection
 
 ## DNS Configuration
 

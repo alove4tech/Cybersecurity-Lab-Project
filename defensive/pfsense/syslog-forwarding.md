@@ -51,7 +51,7 @@ Navigate to: **Status → System Logs → Settings**
 | Remote Log Server | 10.10.69.20 | Wazuh server IP |
 | Remote Log Server Port | 514 | Default syslog UDP port |
 | Protocol | UDP | UDP (default) or TCP for reliability |
-| Log Levels | Everything | Capture all log levels |
+| Log Levels | Log All | Capture all forwarded pfSense log categories |
 
 #### Log Categories to Forward
 
@@ -133,7 +133,7 @@ ss -lunp | grep ':514'
 
 Expected result: Wazuh is listening on UDP 514 for pfSense syslog.
 
-The pfSense side still needs remote syslog enabled in the pfSense web interface and pointed to `10.10.69.20:514/UDP`. Once enabled, verify traffic on the Wazuh manager:
+The pfSense side is configured for remote syslog forwarding to `10.10.69.20:514/UDP` using UDP. Firewall events have been confirmed flowing from pfSense to the Wazuh manager. To re-verify traffic on the Wazuh manager:
 
 ```bash
 tcpdump -i any host 10.10.69.1 and udp port 514 -n -v
@@ -480,10 +480,10 @@ Create a new dashboard in Wazuh with these panels:
 
 ## Validation Checklist
 
-- [ ] pfSense remote syslog enabled
+- [x] pfSense remote syslog enabled
 - [x] Wazuh UDP 514 listener configured
-- [ ] Wazuh server receiving pfSense syslog traffic (tcpdump verified)
-- [ ] Logs visible in Wazuh Dashboard → Events viewer
+- [x] Wazuh server receiving pfSense syslog traffic
+- [x] Firewall events visible in Wazuh telemetry
 - [x] UC-003 Wazuh rules deployed
 - [x] Port sweep and port scan rules deployed
 - [ ] Blocked external access detection validated

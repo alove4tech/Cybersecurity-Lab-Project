@@ -72,8 +72,8 @@ The current custom Wazuh ruleset contains 23 deployed rules mapped to the seven 
 
 ### Planned Expansions
 - Kerberos TGT volume anomalies (4768)
-- Firewall anomaly detection (blocked external access, port sweep)
-- Correlation rules (auth + network events)
+- Blocked external access detection
+- Cross-source correlation rules combining authentication and network events
 - Baseline-driven privileged activity anomaly detection
 
 ---

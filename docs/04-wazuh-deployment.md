@@ -120,12 +120,12 @@ msiexec.exe /i wazuh-agent-<version>.msi /q WAZUH_MANAGER="10.10.69.20" WAZUH_AG
 
 ### pfSense Agent (Syslog Forwarding)
 
-pfSense does not run a native Wazuh agent. Instead, firewall telemetry is forwarded via syslog. The Wazuh manager has a UDP 514 listener enabled in `ossec.conf` and restricted to the pfSense firewall (`10.10.69.1`).
+pfSense does not run a native Wazuh agent. Instead, firewall telemetry is forwarded via syslog. The Wazuh manager has a UDP 514 listener enabled in `ossec.conf` and restricted to the pfSense firewall (`10.10.69.1`). Remote logging is enabled on pfSense and forwards firewall telemetry to `10.10.69.20:514/UDP`.
 
 1. Configure remote syslog in pfSense: Status → System Logs → Settings
 2. Set remote log server to Wazuh manager IP (`10.10.69.20`)
 3. Use UDP 514
-4. Enable log categories: Firewall, DHCP, System, VPN
+4. Enable Log All mode for forwarded pfSense events
 5. Verify ingestion in Wazuh Dashboard → Events viewer
 
 ---
@@ -138,8 +138,10 @@ pfSense does not run a native Wazuh agent. Instead, firewall telemetry is forwar
 | dc01 | 10.10.69.10 | Windows Server 2022 | Wazuh Agent | Windows Security (4624, 4625, 4672, 4768, 4769), Sysmon | ✅ Enrolled |
 | win10-client | DHCP | Windows 10 | Wazuh Agent | Windows Security, Sysmon | ✅ Enrolled |
 | win11-client | DHCP | Windows 11 | Wazuh Agent | Windows Security, Sysmon | ✅ Enrolled |
-| Debian-Attack | DHCP (typically 10.10.69.50) | Debian | Wazuh Agent | /var/log/auth.log, syslog | ✅ Enrolled |
-| pfSense | 10.10.69.1 | pfSense | Syslog Forwarder | Firewall, DHCP, System | Wazuh receiver ready; forwarding verification pending |
+| Debian-Attack | DHCP (typically 10.10.69.50) | Debian | Traffic Generator | Attack simulation activity | N/A |
+| pfSense | 10.10.69.1 | pfSense | Syslog Forwarder | Firewall, DHCP, System | ✅ Forwarding to Wazuh |
+
+Current active Wazuh endpoints: `wazuh-server`, `dc01`, `win10-client`, and `win11-client`.
 
 ---
 
@@ -172,11 +174,13 @@ Agents monitor:
 
 ### Firewall Log Configuration (pfSense)
 
-Wazuh manager listener status:
+Wazuh manager and pfSense forwarding status:
 
 - UDP 514: listening for pfSense syslog
 - Source restriction: `10.10.69.1` only
-- Detection dependency: pfSense remote syslog forwarding to `10.10.69.20:514/UDP`
+- pfSense remote syslog: enabled to `10.10.69.20:514/UDP`
+- Forwarded mode: Log All
+- Firewall events: flowing into Wazuh telemetry
 
 Log categories to forward:
 - Firewall rules (allow/deny)
@@ -225,6 +229,7 @@ Expected state:
 - Wazuh manager: active/running
 - UDP 514: listening for pfSense syslog
 - TCP 1514: listening for Wazuh endpoint communication
+- pfSense firewall events: forwarding to Wazuh over UDP 514
 
 ---
 
@@ -260,11 +265,11 @@ Expected state:
 - [x] Dashboard login working
 - [x] DC01 agent enrolled and reporting
 - [x] Windows client agents enrolled
-- [x] Linux attack VM agent enrolled
+- [x] Wazuh server local agent active
 - [x] Wazuh UDP 514 syslog listener configured for pfSense
-- [ ] pfSense remote syslog forwarding enabled and verified
+- [x] pfSense remote syslog forwarding enabled and verified
 - [x] Windows Security events ingesting (4624, 4625, 4672, 4768, 4769)
-- [x] Linux auth.log ingesting
+- [x] Wazuh server Linux auth logs ingesting
 - [x] Sysmon events ingesting (Event ID 1 on Windows endpoints)
 - [x] Custom Wazuh rules 100001–100804 deployed where applicable
 - [x] All 23 custom rules aligned to UC-001 through UC-007
@@ -307,9 +312,9 @@ telnet 10.10.69.20 1514
 ## Next Steps
 
 - [x] Stand up `wazuh-server` at `10.10.69.20` and document final package versions
-- [x] Enroll DC01 first, then the two Windows clients, then Debian-Attack
+- [x] Enroll DC01, the two Windows clients, and the Wazuh server local agent
 - [x] Configure Wazuh UDP 514 listener for pfSense syslog
-- [ ] Enable and verify pfSense remote syslog forwarding to `10.10.69.20:514/UDP`
+- [x] Enable and verify pfSense remote syslog forwarding to `10.10.69.20:514/UDP`
 - [x] Implement 4625 burst + password spray correlation (UC-004, rules 100600–100601)
 - [x] Build correlation rules for lateral movement detection (rules 100200–100401)
 - [x] Kerberos anomaly detection (UC-005, rules 100300–100303)

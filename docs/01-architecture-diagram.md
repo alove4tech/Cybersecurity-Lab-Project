@@ -86,7 +86,6 @@ graph TB
     tactical -->|"RMM Agent Management"| dc01
     tactical -->|"RMM Agent Management"| win10
     tactical -->|"RMM Agent Management"| win11
-    attack -->|"Agent"| wazuh
     pfsense -->|"Syslog UDP 514"| wazuh
 
     classDef firewall fill:#f9a825,stroke:#f57f17,color:#000
