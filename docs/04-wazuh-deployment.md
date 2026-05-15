@@ -33,8 +33,8 @@ Wazuh serves as the SIEM (Security Information and Event Management) platform fo
 │                    Agents                                    │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
 │  │   Linux      │  │   Windows    │  │ pfSense     │       │
-│  │   Agent      │  │   Agent      │  │   Agent     │       │
-│  │  (auth.log)  │  │  (Security)  │  │  (syslog)   │       │
+│  │   Agent      │  │   Agent      │  │  Syslog     │       │
+│  │  (auth.log)  │  │  (Security)  │  │ Forwarder   │       │
 │  └──────────────┘  └──────────────┘  └──────────────┘       │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -237,25 +237,28 @@ Expected state:
 
 ### Key Dashboards
 
-1. **Security Events Overview**
-   - Total events by source
-   - Top alerting rules
-   - Severity distribution
+Four custom Wazuh dashboards are deployed and aligned to the seven detection
+use cases:
 
-2. **Authentication Monitoring**
-   - Failed vs. successful logons
-   - Brute force detection (UC-001)
-   - Kerberos ticket anomalies (UC-002)
+1. **Detection Use Case Overview**
+   - Rule hit counts by use case
+   - Alert severity distribution
+   - High-priority detections across UC-001 through UC-007
 
-3. **Network Activity**
-   - Firewall log correlation
-   - Connection frequency by host
-   - Blocked traffic analysis
+2. **Authentication and Kerberos Monitoring**
+   - Failed and successful authentication trends
+   - SSH brute force and password spraying activity
+   - Kerberos RC4 service ticket and Kerberos anomaly alerts
 
-4. **Incident Response**
-   - Alert timeline
-   - Affected assets
-   - Investigation notes
+3. **Firewall and Lateral Movement Monitoring**
+   - pfSense `filterlog` volume and action breakdown
+   - Lateral movement, port sweep, and port scan rule activity
+   - Top source and destination patterns for firewall events
+
+4. **Endpoint and Privileged Activity Monitoring**
+   - Sysmon suspicious process execution alerts
+   - Privileged logon correlation results
+   - Endpoint-focused investigation views for Windows hosts
 
 ---
 
@@ -274,7 +277,8 @@ Expected state:
 - [x] Custom Wazuh rules 100001–100804 deployed where applicable
 - [x] All 23 custom rules aligned to UC-001 through UC-007
 - [x] Alert generation validated for UC-001 through UC-007
-- [ ] Dashboards configured (in progress)
+- [x] Wazuh dashboard API access validated
+- [x] Four custom Wazuh dashboards configured for UC-001 through UC-007
 - [ ] Wazuh Active Response configured (planned)
 
 ---
@@ -320,8 +324,9 @@ telnet 10.10.69.20 1514
 - [x] Kerberos anomaly detection (UC-005, rules 100300–100303)
 - [x] Privileged logon correlation (UC-006, rule 100500)
 - [x] Suspicious process execution via Sysmon (UC-007, rules 100800–100804)
+- [x] Validate Wazuh dashboard API access
+- [x] Build Wazuh dashboards for all seven detection use cases
 - [ ] Create automated response playbooks (Active Response)
-- [ ] Build out Wazuh dashboards
 - [ ] Integrate threat intelligence feeds (future)
 
 ---

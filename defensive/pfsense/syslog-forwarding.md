@@ -28,9 +28,9 @@ Forward pfSense firewall logs to Wazuh SIEM for centralized monitoring, enabling
 │                      Wazuh Server                            │
 │  10.10.69.20                                                 │
 │  ┌───────────────────────────────────────────────────────┐  │
-│  │  Syslog Receiver (rsyslog/syslog-ng)                  │  │
-│  │  → Decodes pf syslog format                           │  │
-│  │  → Forwards to Filebeat → Wazuh Indexer                │  │
+│  │  Wazuh Manager Syslog Listener                         │  │
+│  │  → Receives pfSense syslog directly on UDP 514         │  │
+│  │  → Applies Wazuh decoders and custom rules             │  │
 │  └───────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -133,11 +133,18 @@ ss -lunp | grep ':514'
 
 Expected result: Wazuh is listening on UDP 514 for pfSense syslog.
 
-The pfSense side is configured for remote syslog forwarding to `10.10.69.20:514/UDP` using UDP. Firewall events have been confirmed flowing from pfSense to the Wazuh manager. To re-verify traffic on the Wazuh manager:
+The pfSense side is configured for remote syslog forwarding to `10.10.69.20:514/UDP` using UDP. Firewall events have been confirmed flowing from pfSense to the Wazuh manager, with roughly 12,000 `filterlog` events observed in Wazuh archives during validation. To re-verify traffic on the Wazuh manager:
 
 ```bash
 tcpdump -i any host 10.10.69.1 and udp port 514 -n -v
 ```
+
+### Current Validation Notes
+
+- Wazuh receives pfSense firewall telemetry on UDP 514.
+- Validation confirmed persistent forwarding after reboot.
+- The initial archive volume is primarily block telemetry from the upstream-facing interface.
+- Additional LAN pass-rule logging can be enabled later if higher-fidelity east/west traffic visibility is required.
 
 ---
 
@@ -484,11 +491,12 @@ Create a new dashboard in Wazuh with these panels:
 - [x] Wazuh UDP 514 listener configured
 - [x] Wazuh server receiving pfSense syslog traffic
 - [x] Firewall events visible in Wazuh telemetry
+- [x] pfSense syslog forwarding persists after reboot
 - [x] UC-003 Wazuh rules deployed
 - [x] Port sweep and port scan rules deployed
+- [x] Dashboard panels configured for firewall and lateral movement visibility
 - [ ] Blocked external access detection validated
 - [ ] Correlation rules tested
-- [ ] Dashboard panels configured
 
 ---
 
@@ -538,7 +546,7 @@ pfSense can generate significant log volume. Mitigation strategies:
 1. **Filter log categories** in pfSense (disable Resolver logs)
 2. **Use Wazuh rules** to suppress low-value alerts
 3. **Implement log rotation** on Wazuh server
-4. **Consider rate limiting** in rsyslog for high-volume events
+4. **Consider rate limiting** on the Wazuh syslog listener path for high-volume events
 
 ---
 

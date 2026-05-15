@@ -44,7 +44,7 @@ All events are collected via Wazuh agents or syslog forwarding and validated aga
 - Network segmentation: pfSense (10.10.69.1) isolating 10.10.69.0/24
 - Identity: Windows Server 2022 AD DS / DNS (DC01 – 10.10.69.10)
 - Endpoints: WIN10-CLIENT, WIN11-CLIENT (domain-joined)
-- SIEM: Wazuh (server + agents) collecting Windows Security telemetry
+- SIEM: Wazuh (server + agents) collecting Windows Security, Sysmon, and pfSense telemetry
 - RMM: Tactical RMM on Debian 12 (10.10.69.15) for internal Windows endpoint management
 - Targets: Metasploitable2/3 (Ubuntu + Win2k8), Debian attack/management VM
 
@@ -53,10 +53,9 @@ All events are collected via Wazuh agents or syslog forwarding and validated aga
 See the full roadmap in [99-roadmap.md](99-roadmap.md) for planned and completed work.
 
 - [ ] Evidence screenshots for validated detections (in progress)
-- [ ] Dashboard implementation in Wazuh
+- [x] Dashboard implementation in Wazuh
 - [ ] Wazuh Active Response for auto-blocking scanners
 - [ ] Blocked external access detection
-- [ ] Port sweep and recon detection coverage
 - [ ] Automated lab build scripts (Terraform/Ansible)
 - [ ] Full purple-team scenario write-ups (attack → alert → response)
 
@@ -71,6 +70,7 @@ See the full roadmap in [99-roadmap.md](99-roadmap.md) for planned and completed
 | [Wazuh Deployment](04-wazuh-deployment.md) | SIEM setup, agent onboarding, rules |
 | [Evidence Collection Guide](05-evidence-guide.md) | Screenshot standards and chain of custody |
 | [Tactical RMM Deployment](06-tactical-rmm-deployment.md) | Internal RMM deployment, Windows endpoint onboarding, Linux/macOS agent troubleshooting |
+| [May 15 Progress Snapshot](session-progress-2026-05-15.md) | Wazuh/pfSense validation, dashboard deployment, and rule status |
 | [VM Inventory](../assets/vm-inventory.md) | All lab VMs with roles, IPs, and notes |
 | [Roadmap](99-roadmap.md) | Planned work and completion status |
 

@@ -27,6 +27,6 @@ Lab network runs on an isolated VLAN — 10.10.69.0/24 — behind a pfSense VM a
 ## Isolation Notes
 
 - The lab VLAN has no route to the internet or home network
-- Lab activity remains confined to `10.10.69.0/24` and does not target the `192.168.69.0/24` home network
+- Lab activity remains confined to `10.10.69.0/24` and does not target the upstream home network
 - Snapshots on all VMs allow clean-state resets between exercises
 - Attack tools are confined to the Debian-Attack host

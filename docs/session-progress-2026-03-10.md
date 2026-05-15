@@ -48,9 +48,9 @@ Enhanced with:
 **File:** `defensive/pfsense/syslog-forwarding.md`
 
 Completely rewrote with:
-- Architecture diagram (pfSense → rsyslog → Filebeat → Wazuh)
+- Architecture diagram (pfSense → Wazuh Manager syslog listener)
 - Detailed pfSense configuration steps (UI navigation)
-- Wazuh server configuration (rsyslog + Filebeat)
+- Wazuh manager direct syslog listener configuration
 - pfSense log format examples (firewall allow/block, NAT, DHCP, VPN)
 - Three detection use cases:
   - UC-003: Lateral movement detection

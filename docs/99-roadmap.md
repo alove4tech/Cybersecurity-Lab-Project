@@ -16,6 +16,8 @@
 - [x] CS-001 through CS-004: Case studies with live simulation
 - [x] Correlation rules for auth + network events
 - [x] Dashboard visualization plan
+- [x] Wazuh dashboard API access validated
+- [x] Four Wazuh dashboards built for UC-001 through UC-007
 
 ## Detection maturity
 
@@ -32,13 +34,11 @@
 ## In progress
 
 - [ ] Evidence screenshots for validated detections
-- [ ] Dashboard implementation in Wazuh
 - [ ] Wazuh Active Response for auto-blocking scanners
 
 ## Planned
 
 - [ ] Blocked external access detection
-- [ ] Port sweep and recon detection coverage
 - [ ] Kerberos TGT volume anomaly (4768)
 - [ ] Automated lab build scripts (Terraform/Ansible)
 - [ ] Full purple-team scenario write-ups linking attack → alert → response

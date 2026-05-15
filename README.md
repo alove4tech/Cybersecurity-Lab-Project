@@ -53,6 +53,7 @@ For each use case I:
 ## Lab artifacts at a glance
 
 - pfSense syslog forwarding notes are documented and tied into the detection workflow
+- Wazuh dashboards are configured for all seven documented detection use cases
 - Sysmon coverage is in place for process execution visibility on Windows hosts
 - Use case write-ups live under `detections/use-cases/` and map cleanly to the corresponding playbooks
 - Progress snapshots live under `docs/session-progress-*.md` so changes over time are easy to track
@@ -76,9 +77,8 @@ For each use case I:
 ## Next up
 
 - [ ] Evidence screenshots for validated detections (in progress)
-- [ ] Dashboard implementation in Wazuh
+- [x] Dashboard implementation in Wazuh
 - [ ] Blocked external access detection
-- [ ] Port sweep and recon detection coverage
 - [ ] Terraform/Ansible provisioning for repeatable lab builds
 - [ ] Full purple-team scenario write-ups (attack → alert → response)
 - [ ] Wazuh Active Response for auto-blocking
