@@ -141,7 +141,7 @@ Post-remediation 4769 shows:
 - `TicketEncryptionType>0x17`: Matches RC4-HMAC encryption
 - MITRE ATT&CK T1558.003: Kerberoasting technique
 
-A companion rule, `100101`, is used for related RC4 service-ticket alerting and correlation support in the deployed ruleset.
+A companion rule, `100101`, enriches RC4 service-ticket alerts when Wazuh has parsed both `win.eventdata.serviceName` and `win.eventdata.ipAddress`. This keeps the base `100100` alert broad while giving analysts a higher-context event for source-IP, requester, and target-service triage.
 
 **Testing the Rule:**
 

@@ -115,16 +115,36 @@ The privileged logon use case uses a dedicated 100500-series Wazuh rule chain. T
 - Service-account noise filtered where applicable
 - Privileged account or remote administrative session identified
 
-### Example Wazuh Rule
+### Example Wazuh Rules
 
 ```xml
-<rule id="100500" level="8">
-  <if_group>windows</if_group>
-  <field name="win.system.eventID">4672</field>
-  <description>LAB: Privileged logon detected on Windows system</description>
-  <group>windows,authentication,privileged_logon,lab</group>
-</rule>
+<group name="windows,authentication,">
+  <rule id="100500" level="8">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">4672</field>
+    <description>LAB: Privileged logon detected on Windows system</description>
+    <group>windows,authentication,privileged_logon,lab</group>
+  </rule>
+
+  <rule id="100501" level="9">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">4624</field>
+    <field name="win.eventdata.logonType" type="pcre2">^(3|10)$</field>
+    <field name="win.eventdata.targetUserName" type="pcre2">(?i)(admin|administrator|domain admins?|enterprise admins?)</field>
+    <description>LAB: Remote administrative logon by $(win.eventdata.targetUserName) from $(win.eventdata.ipAddress)</description>
+    <group>windows,authentication,privileged_logon,remote_admin,lab</group>
+  </rule>
+
+  <rule id="100502" level="11" frequency="2" timeframe="600">
+    <if_matched_sid>100501</if_matched_sid>
+    <same_field>win.eventdata.ipAddress</same_field>
+    <description>LAB: Repeated remote administrative logons from $(win.eventdata.ipAddress) within 10 minutes</description>
+    <group>windows,authentication,privileged_logon,remote_admin_correlation,lab</group>
+  </rule>
+</group>
 ```
+
+Rule `100500` catches the privileged-session event, `100501` highlights remote administrative logons, and `100502` raises severity when the same source repeats remote administrative activity within the tuning window.
 
 **Note:** Event ID 4624 and Event ID 4672 correlation is validated by comparing Logon ID values and reviewing source host, source IP, and logon type.
 

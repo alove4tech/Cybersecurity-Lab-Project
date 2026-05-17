@@ -75,6 +75,18 @@
     </mitre>
     <group>kerberos,kerberoasting,privilege_escalation</group>
   </rule>
+
+  <!-- Companion enrichment rule for RC4 tickets that include client/service context -->
+  <rule id="100101" level="10">
+    <if_sid>100100</if_sid>
+    <field name="win.eventdata.serviceName">.+</field>
+    <field name="win.eventdata.ipAddress">.+</field>
+    <description>Kerberos RC4 service ticket with source context: $(win.eventdata.targetUserName) requested $(win.eventdata.serviceName) from $(win.eventdata.ipAddress)</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+    <group>kerberos,kerberoasting,rc4_ticket_context,credential_access</group>
+  </rule>
 </group>
 
 <!-- ============================================================ -->
@@ -202,6 +214,32 @@
       <id>T1078</id>
     </mitre>
     <group>windows,authentication,privileged_logon,lab</group>
+  </rule>
+
+  <!-- Remote administrative logon indicators from Windows Event ID 4624 -->
+  <rule id="100501" level="9">
+    <if_group>windows</if_group>
+    <field name="win.system.eventID">4624</field>
+    <field name="win.eventdata.logonType" type="pcre2">^(3|10)$</field>
+    <field name="win.eventdata.targetUserName" type="pcre2">(?i)(admin|administrator|domain admins?|enterprise admins?)</field>
+    <description>LAB: Remote administrative logon by $(win.eventdata.targetUserName) from $(win.eventdata.ipAddress)</description>
+    <mitre>
+      <id>T1078</id>
+      <id>T1021</id>
+    </mitre>
+    <group>windows,authentication,privileged_logon,remote_admin,lab</group>
+  </rule>
+
+  <!-- Correlate repeated remote administrative activity from the same source -->
+  <rule id="100502" level="11" frequency="2" timeframe="600">
+    <if_matched_sid>100501</if_matched_sid>
+    <same_field>win.eventdata.ipAddress</same_field>
+    <description>LAB: Repeated remote administrative logons from $(win.eventdata.ipAddress) within 10 minutes</description>
+    <mitre>
+      <id>T1078</id>
+      <id>T1021</id>
+    </mitre>
+    <group>windows,authentication,privileged_logon,remote_admin_correlation,lab</group>
   </rule>
 </group>
 
