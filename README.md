@@ -2,7 +2,7 @@
 
 SOC + detection lab running on Proxmox. Isolated VLAN (10.10.69.0/24) with Active Directory, Wazuh SIEM, and attack hosts for detection engineering and IR practice.
 
-[![Detection status](https://img.shields.io/badge/detections-7%20validated-brightgreen)](./detections/) [![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-14%20techniques-blue)](#mitre-attck-coverage) [![Playbooks](https://img.shields.io/badge/playbooks-4-orange)](./incident-response/)
+[![Detection status](https://img.shields.io/badge/detections-7%20validated-brightgreen)](./detections/) [![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-18%20techniques-blue)](#mitre-attck-coverage) [![Playbooks](https://img.shields.io/badge/playbooks-4-orange)](./incident-response/)
 
 ## Table of contents
 
@@ -45,7 +45,7 @@ For each use case I:
 | Password spraying (AD) | 100600, 100601 | Done |
 | Kerberos anomaly correlation | 100300–100303 | Done |
 | Privileged logon correlation | 100500 | Done |
-| Suspicious process execution (Sysmon) | 100800–100804 | Done |
+| Suspicious process execution (Sysmon) | 100800–100807 | Done |
 
 **Incident response playbooks:** PB-001 (brute force), PB-002 (Kerberos RC4), PB-003 (lateral movement), PB-004 (suspicious process)
 **Case studies:** CS-001, CS-002, CS-003, CS-004 validated against live telemetry
@@ -95,8 +95,12 @@ For each use case I:
 | T1021.004 | SSH | UC-001 |
 | T1059.001 | PowerShell | UC-007 |
 | T1003 | OS Credential Dumping | UC-007 |
+| T1003.001 | LSASS Memory | UC-007 |
 | T1218 | Signed Binary Proxy Execution | UC-007 |
+| T1218.005 | Mshta | UC-007 |
+| T1218.011 | Rundll32 | UC-007 |
 | T1105 | Ingress Tool Transfer | UC-007 |
+| T1197 | BITS Jobs | UC-007 |
 | T1047 | WMI | UC-007 |
 | T1078 | Valid Accounts | UC-006 |
 | T1595 | Active Scanning | UC-003 |

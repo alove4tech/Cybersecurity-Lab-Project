@@ -41,7 +41,7 @@ Each use case includes:
 
 ## Wazuh Rule Deployment Status
 
-The current custom Wazuh ruleset contains 23 deployed rules mapped to the seven documented use cases.
+The current custom Wazuh ruleset contains 26 deployed rules mapped to the seven documented use cases.
 
 | Use Case | Rule IDs | Coverage | Status |
 |----------|----------|----------|--------|
@@ -51,7 +51,7 @@ The current custom Wazuh ruleset contains 23 deployed rules mapped to the seven 
 | UC-004 Password Spraying | 100600, 100601 | Event ID 4625 failures across multiple usernames from one source IP | 🟢 Validated |
 | UC-005 Kerberos Anomaly | 100300, 100301, 100302, 100303 | SPN enumeration, targeted SPN activity, high-volume Kerberos ticket requests | 🟢 Validated |
 | UC-006 Privileged Logon | 100500, 100501, 100502 | Privileged Windows logons, service account filtering, remote admin logon correlation | 🟢 Validated |
-| UC-007 Suspicious Process | 100800, 100801, 100802, 100803, 100804 | Sysmon suspicious process execution, PowerShell, credential dumping, certutil, WMI | 🟢 Validated |
+| UC-007 Suspicious Process | 100800, 100801, 100802, 100803, 100804, 100805, 100806, 100807 | Sysmon suspicious process execution, PowerShell, credential dumping, certutil, WMI, bitsadmin, mshta, rundll32 | 🟢 Validated |
 
 ---
 
@@ -103,8 +103,12 @@ This helps track detection coverage growth over time.
 - T1595.002 – Content Scanning
 - T1059.001 – Command and Scripting Interpreter: PowerShell
 - T1003 – OS Credential Dumping
+- T1003.001 – LSASS Memory
 - T1218 – Signed Binary Proxy Execution
+- T1218.005 – Mshta
+- T1218.011 – Rundll32
 - T1105 – Ingress Tool Transfer
+- T1197 – BITS Jobs
 - T1047 – Windows Management Instrumentation
 
 Additional techniques will be mapped as new use cases are developed.

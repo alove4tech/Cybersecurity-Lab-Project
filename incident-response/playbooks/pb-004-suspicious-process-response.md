@@ -41,7 +41,7 @@ Severity: High (default for encoded PowerShell, LOLBin, WMI execution)
 ### 1. Confirm Alert Details
 
 From Wazuh Dashboard, extract:
-- **Rule ID:** Which rule triggered (100800–100804)
+- **Rule ID:** Which rule triggered (100800–100807)
 - **Host:** Endpoint where process executed
 - **User:** Account context running the process
 - **Process Image:** Full path of the spawned process
@@ -58,6 +58,9 @@ From Wazuh Dashboard, extract:
 | 100802 (Credential Dumping) | Critical | Treat as active incident |
 | 100803 (Certutil Download) | High | Identify downloaded payload |
 | 100804 (WMI Execution) | High | Determine if remote or local |
+| 100805 (Bitsadmin Transfer) | High | Identify transfer source, destination, and persistence intent |
+| 100806 (Mshta Execution) | High | Review script/HTA source and isolate if remote content ran |
+| 100807 (Rundll32 Proxy Execution) | High | Inspect DLL/handler, command line, and loaded modules |
 
 ### 3. Determine Context
 
@@ -277,7 +280,7 @@ Get-WinEvent -FilterHashtable @{LogName='System'; ID=7045} | Select-Object -Firs
 Set up targeted monitoring:
 ```bash
 # Watch for same techniques from any source
-rule.id:(100800 OR 100801 OR 100802 OR 100803 OR 100804) AND @timestamp:[now-24h TO now]
+rule.id:(100800 OR 100801 OR 100802 OR 100803 OR 100804 OR 100805 OR 100806 OR 100807) AND @timestamp:[now-24h TO now]
 ```
 
 ### 3. Validate Hardening
@@ -293,7 +296,7 @@ rule.id:(100800 OR 100801 OR 100802 OR 100803 OR 100804) AND @timestamp:[now-24h
 
 ### Detection Improvements
 
-- Add rules for additional LOLBins identified during investigation
+- Extend LOLBin coverage for additional binaries identified during investigation
 - Update Rule 100802 patterns if new credential dumping tools discovered
 - Implement frequency-based correlation for repeated bypass attempts
 - Add automated enrichment (GeoIP, threat intel lookup for source IPs)
@@ -330,7 +333,7 @@ rule.id:(100800 OR 100801 OR 100802 OR 100803 OR 100804) AND @timestamp:[now-24h
 To test this playbook:
 
 1. Deploy Sysmon and verify Event ID 1 collection on target endpoint
-2. Deploy UC-007 rules (100800–100804) to Wazuh
+2. Deploy UC-007 rules (100800–100807) to Wazuh
 3. From attack VM (10.10.69.50), execute:
    ```bash
    impacket-wmiexec corp.local/jsmith:Password123@10.10.69.10 "powershell.exe -enc <encoded_whoami>"

@@ -193,7 +193,7 @@ Log categories to forward:
 
 ## Custom Rules
 
-The custom ruleset contains 23 deployed Wazuh rules aligned to seven detection use cases. Rules are maintained in the Wazuh manager local rules configuration and validated with Wazuh rule testing before manager restart.
+The custom ruleset contains 26 deployed Wazuh rules aligned to seven detection use cases. Rules are maintained in the Wazuh manager local rules configuration and validated with Wazuh rule testing before manager restart.
 
 | Use Case | Rule IDs | Purpose | Status |
 |----------|----------|---------|--------|
@@ -203,7 +203,7 @@ The custom ruleset contains 23 deployed Wazuh rules aligned to seven detection u
 | UC-004 Password Spraying | 100600, 100601 | Windows 4625 failed network logons across multiple usernames from the same source IP | ✅ Deployed |
 | UC-005 Kerberos Anomaly | 100300, 100301, 100302, 100303 | Kerberos RC4 ticket grouping, SPN enumeration, SPN targeting, and volume anomaly correlation | ✅ Deployed |
 | UC-006 Privileged Logon | 100500, 100501, 100502 | Privileged logon detection with filtering for service accounts and remote administrative logons | ✅ Deployed |
-| UC-007 Suspicious Process | 100800, 100801, 100802, 100803, 100804 | Sysmon process execution detections for PowerShell, credential dumping, LOLBins, and WMI execution | ✅ Deployed |
+| UC-007 Suspicious Process | 100800, 100801, 100802, 100803, 100804, 100805, 100806, 100807 | Sysmon process execution detections for PowerShell, credential dumping, certutil, WMI execution, bitsadmin, mshta, and rundll32 | ✅ Deployed |
 
 ### Rule Deployment Notes
 
@@ -212,7 +212,7 @@ The custom ruleset contains 23 deployed Wazuh rules aligned to seven detection u
 - UC-003 includes a pfSense `filterlog` base rule plus correlation rules using Wazuh field correlation syntax such as `same_srcip`, `different_dstip`, and destination port grouping.
 - UC-004 is separated from UC-003 and uses its own 100600-series rules for password spraying across multiple usernames.
 - UC-006 was moved into the 100500-series to keep privileged-logon logic separate from network-scanning logic and includes filtering for noisy service account activity.
-- UC-007 uses Sysmon Event ID 1 telemetry from all Windows endpoints.
+- UC-007 uses Sysmon Event ID 1 telemetry from all Windows endpoints and includes high-confidence LOLBin coverage for certutil, bitsadmin, mshta, and rundll32.
 
 ### Listener Validation
 
@@ -274,8 +274,8 @@ use cases:
 - [x] Windows Security events ingesting (4624, 4625, 4672, 4768, 4769)
 - [x] Wazuh server Linux auth logs ingesting
 - [x] Sysmon events ingesting (Event ID 1 on Windows endpoints)
-- [x] Custom Wazuh rules 100001–100804 deployed where applicable
-- [x] All 23 custom rules aligned to UC-001 through UC-007
+- [x] Custom Wazuh rules 100001–100807 deployed where applicable
+- [x] All 26 custom rules aligned to UC-001 through UC-007
 - [x] Alert generation validated for UC-001 through UC-007
 - [x] Wazuh dashboard API access validated
 - [x] Four custom Wazuh dashboards configured for UC-001 through UC-007
@@ -323,7 +323,7 @@ telnet 10.10.69.20 1514
 - [x] Build correlation rules for lateral movement detection (rules 100200–100401)
 - [x] Kerberos anomaly detection (UC-005, rules 100300–100303)
 - [x] Privileged logon correlation (UC-006, rule 100500)
-- [x] Suspicious process execution via Sysmon (UC-007, rules 100800–100804)
+- [x] Suspicious process execution via Sysmon (UC-007, rules 100800–100807)
 - [x] Validate Wazuh dashboard API access
 - [x] Build Wazuh dashboards for all seven detection use cases
 - [ ] Create automated response playbooks (Active Response)

@@ -11,7 +11,7 @@
 - [x] UC-004: Password spraying detection (rules 100600, 100601)
 - [x] UC-005: Kerberos anomaly / Kerberoasting detection (rules 100300–100303)
 - [x] UC-006: Privileged logon correlation detection (rule 100500)
-- [x] UC-007: Suspicious process execution via Sysmon (rules 100800–100804)
+- [x] UC-007: Suspicious process execution via Sysmon (rules 100800–100807)
 - [x] PB-001 through PB-004: Incident response playbooks
 - [x] CS-001 through CS-004: Case studies with live simulation
 - [x] Correlation rules for auth + network events
@@ -29,7 +29,7 @@
 | UC-004 | Password Spraying (AD) | 🟢 Validated | 100600, 100601 | PB-001 | — |
 | UC-005 | Kerberos Anomaly Correlation | 🟢 Validated | 100300–100303 | PB-002 | — |
 | UC-006 | Privileged Logon Correlation | 🟢 Validated | 100500 | — | — |
-| UC-007 | Suspicious Process Execution (Sysmon) | 🟢 Validated | 100800–100804 | PB-004 | CS-004 |
+| UC-007 | Suspicious Process Execution (Sysmon) | 🟢 Validated | 100800–100807 | PB-004 | CS-004 |
 
 ## In progress
 
@@ -42,4 +42,4 @@
 - [ ] Kerberos TGT volume anomaly (4768)
 - [ ] Automated lab build scripts (Terraform/Ansible)
 - [ ] Full purple-team scenario write-ups linking attack → alert → response
-- [ ] Additional LOLBin coverage (bitsadmin, mshta, rundll32)
+- [x] Additional LOLBin coverage (bitsadmin, mshta, rundll32)

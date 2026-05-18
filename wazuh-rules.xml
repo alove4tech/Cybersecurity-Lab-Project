@@ -9,7 +9,7 @@
     100300–100303 Kerberos anomaly / Kerberoasting correlation (UC-005)
     100500        Privileged logon correlation (UC-006)
     100600–100601 Password spraying detection (UC-004)
-    100800–100804 Suspicious process execution via Sysmon (UC-007)
+    100800–100807 Suspicious process execution via Sysmon (UC-007)
     101000–101400 Firewall correlation rules (planned)
 
   All rules include MITRE ATT&CK technique mappings for dashboard integration.
@@ -339,6 +339,44 @@
       <id>T1047</id>
     </mitre>
     <group>suspicious_process,wmi_execution,endpoint</group>
+  </rule>
+
+  <!-- Bitsadmin transfer job used to download or stage payloads -->
+  <rule id="100805" level="11">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.image">bitsadmin\.exe</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)\s/(?:transfer|create|addfile|resume|setnotifycmdline)\b</field>
+    <description>Suspicious process: Bitsadmin transfer activity from $(win.eventdata.user) - $(win.eventdata.commandLine)</description>
+    <mitre>
+      <id>T1197</id>
+      <id>T1105</id>
+    </mitre>
+    <group>suspicious_process,lolbin,bitsadmin,ingress_tool_transfer,endpoint</group>
+  </rule>
+
+  <!-- Mshta executing inline script or remote content -->
+  <rule id="100806" level="12">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.image">mshta\.exe</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(https?://|vbscript:|javascript:|about:|\.hta\b)</field>
+    <description>Suspicious process: Mshta script or remote content execution from $(win.eventdata.user)</description>
+    <mitre>
+      <id>T1218.005</id>
+    </mitre>
+    <group>suspicious_process,lolbin,mshta,signed_binary_proxy_execution,endpoint</group>
+  </rule>
+
+  <!-- Rundll32 suspicious script handlers and exported functions commonly abused for proxy execution -->
+  <rule id="100807" level="12">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.image">rundll32\.exe</field>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)(javascript:|vbscript:|mshtml|shell32\.dll,ShellExec_RunDLL|url\.dll,FileProtocolHandler|comsvcs\.dll,MiniDump)</field>
+    <description>Suspicious process: Rundll32 proxy execution pattern from $(win.eventdata.user) - $(win.eventdata.commandLine)</description>
+    <mitre>
+      <id>T1218.011</id>
+      <id>T1003.001</id>
+    </mitre>
+    <group>suspicious_process,lolbin,rundll32,signed_binary_proxy_execution,endpoint</group>
   </rule>
 
 </group>
