@@ -18,6 +18,7 @@
 - [x] Dashboard visualization plan
 - [x] Wazuh dashboard API access validated
 - [x] Four Wazuh dashboards built for UC-001 through UC-007
+- [x] Document Mon01 monitoring server deployment with Nagios Core, Grafana OSS, and Zabbix 7.0 LTS
 
 ## Detection maturity
 

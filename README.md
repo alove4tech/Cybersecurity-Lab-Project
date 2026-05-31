@@ -1,6 +1,6 @@
 # Cybersecurity Homelab
 
-SOC + detection lab running on Proxmox. Isolated VLAN (10.10.69.0/24) with Active Directory, Wazuh SIEM, and attack hosts for detection engineering and IR practice.
+SOC + detection lab running on Proxmox. Isolated VLAN (10.10.69.0/24) with Active Directory, Wazuh SIEM, monitoring infrastructure, and attack hosts for detection engineering and IR practice.
 
 [![Detection status](https://img.shields.io/badge/detections-7%20validated-brightgreen)](./detections/) [![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-18%20techniques-blue)](#mitre-attck-coverage) [![Playbooks](https://img.shields.io/badge/playbooks-4-orange)](./incident-response/)
 
@@ -20,6 +20,7 @@ SOC + detection lab running on Proxmox. Isolated VLAN (10.10.69.0/24) with Activ
 - **Domain Controller:** Windows Server 2022 (10.10.69.10, corp.local)
 - **SIEM:** Wazuh (Windows + Linux agents)
 - **RMM:** Tactical RMM (10.10.69.15; rmm.lab.local / api.lab.local / mesh.lab.local)
+- **Monitoring:** Mon01 (10.10.69.25; Nagios Core, Grafana OSS, Zabbix 7.0 LTS)
 - **Attack box:** Debian with Kali tools
 - **Targets:** Metasploitable 2/3
 
@@ -54,6 +55,7 @@ For each use case I:
 
 - pfSense syslog forwarding notes are documented and tied into the detection workflow
 - Wazuh dashboards are configured for all seven documented detection use cases
+- Mon01 monitoring services are documented for Nagios, Grafana, Zabbix, and the local PostgreSQL backend
 - Sysmon coverage is in place for process execution visibility on Windows hosts
 - Use case write-ups live under `detections/use-cases/` and map cleanly to the corresponding playbooks
 - Progress snapshots live under `docs/session-progress-*.md` so changes over time are easy to track
@@ -68,6 +70,7 @@ For each use case I:
 - [Wazuh deployment](docs/04-wazuh-deployment.md)
 - [Evidence collection guide](docs/05-evidence-guide.md)
 - [Tactical RMM deployment](docs/06-tactical-rmm-deployment.md)
+- [Mon01 monitoring server deployment](docs/07-monitoring-server-deployment.md)
 - [pfSense syslog forwarding notes](defensive/pfsense/syslog-forwarding.md)
 - [Detection use cases](detections/)
 - [IR playbooks](incident-response/)

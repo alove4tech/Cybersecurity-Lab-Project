@@ -10,6 +10,7 @@ Lab network runs on an isolated VLAN — 10.10.69.0/24 — behind a pfSense VM a
 | Domain Controller | DC01 | 10.10.69.10 | Static |
 | RMM Server | Tactical RMM | 10.10.69.15 | Static |
 | SIEM / Log Collection | Wazuh | 10.10.69.20 | Static |
+| Monitoring Server | Mon01 | 10.10.69.25 | Static |
 | Windows Workstation | WIN10-CLIENT | DHCP | Dynamic |
 | Windows Workstation | WIN11-CLIENT | DHCP | Dynamic |
 | Attack / Management | Debian-Attack | DHCP | Dynamic |
@@ -23,6 +24,15 @@ Lab network runs on an isolated VLAN — 10.10.69.0/24 — behind a pfSense VM a
 - Default deny rule with explicit allow rules for lab traffic
 - DHCP pool configured for dynamic hosts
 - Syslog forwarding to Wazuh for network-level telemetry
+
+## Mon01 Service Ports
+
+| Service | Host | Port | Purpose |
+|---|---|---|---|
+| Nagios Core | `mon01.corp.local` / `10.10.69.25` | TCP/80 | Baseline health checks through Apache2 |
+| Grafana OSS | `mon01.corp.local` / `10.10.69.25` | TCP/3000 | Monitoring dashboards and Zabbix visualization |
+| Zabbix Frontend | `mon01.corp.local` / `10.10.69.25` | TCP/8080 | Zabbix web UI through Nginx |
+| PostgreSQL | `127.0.0.1` on Mon01 | TCP/5432 | Local Zabbix database backend |
 
 ## Isolation Notes
 

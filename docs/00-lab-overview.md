@@ -5,6 +5,7 @@ Segmented cybersecurity homelab for practicing detection engineering, incident r
 ## What I use it for
 
 - SIEM detection rule development (Wazuh)
+- Infrastructure monitoring and dashboarding (Mon01: Nagios Core, Zabbix, Grafana)
 - Windows AD/ Kerberos attack detection
 - IR playbook testing against real telemetry
 - Network-level detection (firewall logs, port scans)

@@ -18,6 +18,7 @@ The goal of this project is to bridge offensive techniques with defensive monito
 **Firewall:** pfSense (10.10.69.1)
 **Domain Controller:** DC01 (10.10.69.10)
 **Domain:** corp.local
+**Monitoring Server:** Mon01 (10.10.69.25)
 
 # Security Telemetry Validated
 
@@ -46,6 +47,7 @@ All events are collected via Wazuh agents or syslog forwarding and validated aga
 - Endpoints: WIN10-CLIENT, WIN11-CLIENT (domain-joined)
 - SIEM: Wazuh (server + agents) collecting Windows Security, Sysmon, and pfSense telemetry
 - RMM: Tactical RMM on Debian 12 (10.10.69.15) for internal Windows endpoint management
+- Monitoring: Mon01 on Debian 12 (10.10.69.25) running Nagios Core, Grafana OSS, and Zabbix 7.0 LTS
 - Targets: Metasploitable2/3 (Ubuntu + Win2k8), Debian attack/management VM
 
 ## Next Up
@@ -70,6 +72,7 @@ See the full roadmap in [99-roadmap.md](99-roadmap.md) for planned and completed
 | [Wazuh Deployment](04-wazuh-deployment.md) | SIEM setup, agent onboarding, rules |
 | [Evidence Collection Guide](05-evidence-guide.md) | Screenshot standards and chain of custody |
 | [Tactical RMM Deployment](06-tactical-rmm-deployment.md) | Internal RMM deployment, Windows endpoint onboarding, Linux/macOS agent troubleshooting |
+| [Mon01 Monitoring Server Deployment](07-monitoring-server-deployment.md) | Nagios Core, Grafana OSS, and Zabbix 7.0 LTS deployment on Debian 12 |
 | [May 15 Progress Snapshot](session-progress-2026-05-15.md) | Wazuh/pfSense validation, dashboard deployment, and rule status |
 | [VM Inventory](../assets/vm-inventory.md) | All lab VMs with roles, IPs, and notes |
 | [Roadmap](99-roadmap.md) | Planned work and completion status |
