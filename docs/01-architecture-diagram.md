@@ -89,8 +89,10 @@ graph TB
     tactical -->|"RMM Agent Management"| dc01
     tactical -->|"RMM Agent Management"| win10
     tactical -->|"RMM Agent Management"| win11
-    mon01 -->|"ICMP / monitoring checks"| dc01
-    mon01 -->|"Zabbix API datasource"| mon01
+    mon01 -->|"ICMP / SNMP / agent checks"| dc01
+    mon01 -->|"ICMP / agent checks"| wazuh
+    mon01 -->|"ICMP / SNMP checks"| pfsense
+    mon01 -->|"Grafana to Zabbix API (local)"| mon01
     pfsense -->|"Syslog UDP 514"| wazuh
 
     classDef firewall fill:#f9a825,stroke:#f57f17,color:#000
@@ -126,6 +128,7 @@ graph TB
 - DHCP is used for most lab VMs to simulate real enterprise environments
 - Static addressing reserved for infrastructure services (pfSense, AD, SIEM)
 - Mon01 hosts monitoring applications on dedicated ports: Nagios on TCP/80, Grafana on TCP/3000, and Zabbix on TCP/8080
+- Grafana and the Zabbix API run on the same Mon01 host; the diagram shows this as a local integration path
 
 ---
 

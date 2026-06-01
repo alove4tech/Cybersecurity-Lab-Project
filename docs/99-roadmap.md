@@ -41,6 +41,10 @@
 
 - [ ] Blocked external access detection
 - [ ] Kerberos TGT volume anomaly (4768)
+- [ ] PRTG network monitoring (Windows VM, 10.10.69.27)
+- [ ] Zabbix alerting rules for lab hosts (host down, high CPU, disk usage)
+- [ ] Grafana dashboards for lab infrastructure visibility
+- [ ] Nagios service checks for critical lab services (DNS, DHCP, HTTP)
 - [ ] Automated lab build scripts (Terraform/Ansible)
 - [ ] Full purple-team scenario write-ups linking attack → alert → response
 - [x] Additional LOLBin coverage (bitsadmin, mshta, rundll32)

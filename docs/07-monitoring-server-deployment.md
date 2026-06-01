@@ -65,6 +65,20 @@ search corp.local
 nameserver 10.10.69.10
 ```
 
+On Debian systems using `systemd-resolved` or `resolvconf`, manual edits to `/etc/resolv.conf` may be replaced after reboot. Check whether `systemd-resolved` is active before relying on a static resolver file:
+
+```bash
+systemctl is-active systemd-resolved
+```
+
+If it is active and this host should keep a manually managed resolver file, disable it and recreate `/etc/resolv.conf` with the values above:
+
+```bash
+sudo systemctl disable --now systemd-resolved
+sudo rm -f /etc/resolv.conf
+sudo nano /etc/resolv.conf
+```
+
 ## Package Repository Alignment
 
 Debian minimal installs need extended package sections for some database, firmware, and web font dependencies. Enable `contrib`, `non-free`, and `non-free-firmware` in APT sources.
@@ -130,6 +144,20 @@ Import the base schema:
 sudo zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql zabbix
 ```
 
+Confirm PostgreSQL is only listening locally:
+
+```bash
+sudo ss -tlnp | grep 5432
+```
+
+Expected listener:
+
+```text
+127.0.0.1:5432
+```
+
+If PostgreSQL is listening on `0.0.0.0:5432`, set `listen_addresses = 'localhost'` in `/etc/postgresql/15/main/postgresql.conf` and restart PostgreSQL.
+
 Set the database password in `/etc/zabbix/zabbix_server.conf`:
 
 ```text
@@ -154,9 +182,12 @@ sudo ln -s /etc/zabbix/nginx.conf /etc/nginx/sites-enabled/
 Start and enable services:
 
 ```bash
+php -v
 sudo systemctl restart zabbix-server zabbix-agent nginx php8.2-fpm
 sudo systemctl enable zabbix-server zabbix-agent nginx php8.2-fpm
 ```
+
+Adjust the PHP-FPM service name if the installed PHP version differs, such as `php8.3-fpm`.
 
 Access Zabbix at `http://10.10.69.25:8080`. Rotate the default `Admin/zabbix` credentials immediately after first login. For the local PostgreSQL setup, leave database TLS unchecked during the web installer.
 
@@ -201,13 +232,16 @@ Compile and install Nagios plugins:
 
 ```bash
 cd /tmp
-wget https://nagios-plugins.org/download/nagios-plugins-2.4.8.tar.gz
-tar xzf nagios-plugins-2.4.8.tar.gz
-cd nagios-plugins-2.4.8
+PLUGINS_VER="2.5"
+wget https://nagios-plugins.org/download/nagios-plugins-${PLUGINS_VER}.tar.gz
+tar xzf nagios-plugins-${PLUGINS_VER}.tar.gz
+cd nagios-plugins-${PLUGINS_VER}
 ./configure
 make
 sudo make install
 ```
+
+Check the official Nagios Plugins release page before building and update `PLUGINS_VER` when a newer validated release is available.
 
 Enable Nagios:
 
@@ -228,7 +262,9 @@ Create a Zabbix host for the domain controller:
 | Location | Data collection -> Hosts -> Create host |
 | Host name | `DC01` |
 | Template | ICMP Ping |
-| Interface | Agent, `10.10.69.10` |
+| Interface | Simple check / ICMP, `10.10.69.10` |
+
+This documents ICMP-only monitoring for DC01. Do not configure the host as an agent-based check unless the Zabbix agent is installed on DC01, configured with `Server=10.10.69.25`, and allowed through the Windows firewall on TCP/10050.
 
 ### Grafana Zabbix Data Source
 
@@ -240,6 +276,8 @@ sudo grafana cli plugins install alexanderzobnin-zabbix-app
 sudo systemctl restart grafana-server
 ```
 
+The `alexanderzobnin-zabbix-app` plugin is a community plugin and may show an unsigned-plugin warning in Grafana. That is acceptable for this isolated lab after review, but production environments should review plugin source and signing status before use.
+
 Add the Grafana data source:
 
 | Setting | Value |
@@ -247,6 +285,44 @@ Add the Grafana data source:
 | Data source | Zabbix |
 | API route | `http://10.10.69.25:8080/api_jsonrpc.php` |
 | Authentication | Zabbix administrative web profile |
+
+## Verification
+
+Verify the monitoring services are running:
+
+```bash
+sudo systemctl status grafana-server --no-pager
+sudo systemctl status zabbix-server --no-pager
+sudo systemctl status zabbix-agent --no-pager
+sudo systemctl status nagios --no-pager
+sudo systemctl status nginx --no-pager
+sudo systemctl status apache2 --no-pager
+sudo systemctl status postgresql --no-pager
+```
+
+Confirm the expected listeners are active:
+
+```bash
+sudo ss -tlnp | grep -E ':(80|3000|5432|8080)\s'
+```
+
+Expected ports:
+
+| Port | Service |
+|---|---|
+| TCP/80 | Apache2 / Nagios |
+| TCP/3000 | Grafana |
+| TCP/5432 | PostgreSQL on localhost |
+| TCP/8080 | Nginx / Zabbix frontend |
+
+Check local firewall rules if the web interfaces are not reachable from an administrator workstation:
+
+```bash
+sudo nft list ruleset 2>/dev/null
+sudo iptables -L -n 2>/dev/null
+```
+
+Debian minimal installs typically do not enable a local host firewall by default. If rules are blocking access, allow TCP/80, TCP/3000, and TCP/8080 from the Cyberlab subnet.
 
 ## Operational Notes
 
